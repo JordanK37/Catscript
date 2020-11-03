@@ -12,7 +12,6 @@ public class AdditiveExpression extends Expression {
     private final Expression rightHandSide;
 
     public AdditiveExpression(Token operator, Expression leftHandSide, Expression rightHandSide) {
-        super(leftHandSide.getStart(), rightHandSide.getEnd());
         this.leftHandSide = addChild(leftHandSide);
         this.rightHandSide = addChild(rightHandSide);
         this.operator = operator;
@@ -35,4 +34,15 @@ public class AdditiveExpression extends Expression {
         visitor.visit(this);
     }
 
+    public Expression getLeftHandSide() {
+        return leftHandSide;
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public Expression getRightHandSide() {
+        return rightHandSide;
+    }
 }

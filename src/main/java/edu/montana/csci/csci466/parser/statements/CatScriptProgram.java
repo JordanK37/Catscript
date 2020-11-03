@@ -8,15 +8,11 @@ import edu.montana.csci.csci466.tokenizer.Token;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CatScriptProgram extends ParseElement implements Statement {
+public class CatScriptProgram extends Statement {
 
     private StringBuffer output = new StringBuffer();
     private List<Statement> statements = new LinkedList<>();
     private Expression expression;
-
-    public CatScriptProgram(Token start, Token end) {
-        super(start, end);
-    }
 
     public void print(Object v) {
         output.append(v);
@@ -26,14 +22,12 @@ public class CatScriptProgram extends ParseElement implements Statement {
         return output.toString();
     }
 
-    @Override
-    public void setParent(Statement statement) {
-        throw new IllegalArgumentException("Programs cannot have parents");
+    public void addStatement(Statement child) {
+        statements.add(addChild(child));
     }
 
-    public void addStatement(Statement child) {
-        child.setParent(this);
-        statements.add(child);
+    public void setExpression(Expression expression) {
+        this.expression = addChild(expression);
     }
 
     @Override
@@ -47,12 +41,17 @@ public class CatScriptProgram extends ParseElement implements Statement {
         }
     }
 
-    public void setExpression(Expression expression) {
-        this.expression = addChild(expression);
-    }
-
     @Override
     public void accept(ParseTreeVisitor visitor) {
         visitor.visit(this);
     }
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
 }

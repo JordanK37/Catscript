@@ -25,7 +25,7 @@
     <button hx-get="/tokenize">Tokenize</button>
     <button hx-get="/parse">Parse</button>
     <button hx-get="/evaluate">Evaluate</button>
-    <button>Transpile</button>
+    <button hx-get="/transpile">Transpile</button>
     <button>Compile</button>
 </div>
 

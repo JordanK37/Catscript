@@ -1,5 +1,6 @@
 package edu.montana.csci.csci466;
 
+import edu.montana.csci.csci466.js.JSTranspiler;
 import edu.montana.csci.csci466.parser.CatScriptParser;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
 import edu.montana.csci.csci466.tokenizer.CatScriptTokenizer;
@@ -60,6 +61,14 @@ class CatScriptServer {
             CatScriptProgram program = new CatScriptParser().parse(source);
             program.execute();
             return program.getOutput();
+        });
+
+        get("/transpile", (req, resp) -> {
+            String source = req.queryParams("src");
+            CatScriptProgram program = new CatScriptParser().parse(source);
+            String jsSource = JSTranspiler.transpile(program);
+            String output = JSTranspiler.evalJS(jsSource);
+            return "<pre>" + "\n\n  Source =================\n\n" + jsSource + "\n\n  Output =================\n\n" + output + "</pre>";
         });
 
     }

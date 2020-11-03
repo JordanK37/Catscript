@@ -15,9 +15,7 @@ public abstract class ParseElement {
     private List<ParseElement> children;
     private List<ParseError> errors;
 
-    public ParseElement(Token start, Token end) {
-        this.start = start;
-        this.end = end;
+    public ParseElement() {
         this.errors = new LinkedList<>();
         this.children = new LinkedList<>();
     }
@@ -28,6 +26,19 @@ public abstract class ParseElement {
         } else {
             return getParent().getProgram();
         }
+    }
+
+    public void setStart(Token start) {
+        this.start = start;
+    }
+
+    public void setEnd(Token end) {
+        this.end = end;
+    }
+
+    public void setToken(Token token) {
+        setStart(token);
+        setEnd(token);
     }
 
     public ParseElement getParent() {
@@ -51,7 +62,11 @@ public abstract class ParseElement {
     }
 
     public void addError(String errorMessage) {
-        errors.add(new ParseError(getStart(), errorMessage));
+        addError(errorMessage, getStart());
+    }
+
+    public void addError(String errorMessage, Token token) {
+        errors.add(new ParseError(token, errorMessage));
     }
 
     protected <T extends ParseElement> T addChild(T element) {

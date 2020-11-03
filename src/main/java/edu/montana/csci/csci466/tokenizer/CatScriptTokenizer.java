@@ -1,11 +1,20 @@
 package edu.montana.csci.csci466.tokenizer;
 
+import org.slf4j.MDC;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static edu.montana.csci.csci466.tokenizer.TokenType.*;
 
 public class CatScriptTokenizer {
+
+    private static final Map<String, TokenType> KEYWORDS = new HashMap<>();
+    static {
+        KEYWORDS.put("print", PRINT);
+    }
 
     List<Token> tokens = new ArrayList<>();
     int currentToken = 0;
@@ -39,14 +48,11 @@ public class CatScriptTokenizer {
         if(scanIdentifier()) {
             return;
         }
-        if(scanKeyword()) {
-            return;
-        }
         if (scanSyntax()) {
             return;
         }
-        Token token = consumeToken();
-        addToken(ERROR, "<Unexpected Token: [" + token + "]>");
+        addToken(ERROR, "<Unexpected Token: [" + peek() + "]>");
+        postion++;
     }
 
     private boolean scanString() {
@@ -55,13 +61,21 @@ public class CatScriptTokenizer {
     }
 
     private boolean scanIdentifier() {
-        // TODO implement
-        return false;
-    }
-
-    private boolean scanKeyword() {
-        // TODO implement
-        return false;
+        if( isAlpha(peek())) {
+            int start = postion;
+            while (isAlphaNumeric(peek())) {
+                postion++;
+            }
+            String value = src.substring(start, postion);
+            if (KEYWORDS.containsKey(value)) {
+                addToken(KEYWORDS.get(value), value);
+            } else {
+                addToken(IDENTIFIER, value);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean scanNumber() {
@@ -82,6 +96,14 @@ public class CatScriptTokenizer {
 
         if(c == '+') {
             addToken(PLUS, "+");
+            return true;
+        };
+        if(c == '(') {
+            addToken(LEFT_PAREN, "(");
+            return true;
+        };
+        if(c == ')') {
+            addToken(RIGHT_PAREN, ")");
             return true;
         };
 
@@ -149,11 +171,11 @@ public class CatScriptTokenizer {
     }
 
     public boolean matchKeyword(String keyword) {
-        Token token = currentToken();
+        Token token = getCurrentToken();
         return token.getType().equals(IDENTIFIER) && token.getStringValue().equals(keyword);
     }
 
-    public Token currentToken() {
+    public Token getCurrentToken() {
         if (currentToken < tokens.size()) {
             return tokens.get(currentToken);
         } else {
@@ -165,16 +187,24 @@ public class CatScriptTokenizer {
         return tokens.get(currentToken++);
     }
 
-    public void require(TokenType type) {
-        throw new UnsupportedOperationException();
-    }
-
     public boolean match(TokenType... type) {
         for (TokenType tokenType : type) {
-            if (currentToken().getType().equals(tokenType)) {
+            if (getCurrentToken().getType().equals(tokenType)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void reset() {
+        currentToken = 0;
+    }
+
+    public boolean hasMoreTokens() {
+        return !getCurrentToken().getType().equals(EOF);
+    }
+
+    public Token lastToken() {
+        return tokens.get(Math.max(0, currentToken - 1));
     }
 }

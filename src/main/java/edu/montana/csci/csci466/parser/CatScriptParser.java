@@ -5,8 +5,12 @@ import edu.montana.csci.csci466.parser.expressions.Expression;
 import edu.montana.csci.csci466.parser.expressions.IntegerLiteralExpression;
 import edu.montana.csci.csci466.parser.expressions.SyntaxErrorExpression;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
+import edu.montana.csci.csci466.parser.statements.PrintStatement;
+import edu.montana.csci.csci466.parser.statements.Statement;
+import edu.montana.csci.csci466.parser.statements.SyntaxErrorStatement;
 import edu.montana.csci.csci466.tokenizer.CatScriptTokenizer;
 import edu.montana.csci.csci466.tokenizer.Token;
+import edu.montana.csci.csci466.tokenizer.TokenType;
 
 import static edu.montana.csci.csci466.tokenizer.TokenType.*;
 
@@ -16,14 +20,55 @@ public class CatScriptParser {
 
     public CatScriptProgram parse(String source) {
         tokenizer = new CatScriptTokenizer(source);
-        Token start = tokenizer.currentToken();
-        Expression expression = parseExpression();
-        Token end = tokenizer.currentToken();
 
-        CatScriptProgram catScriptProgram = new CatScriptProgram(start, end);
-        catScriptProgram.setExpression(expression);
-        return catScriptProgram;
+        // first parse an expression
+        CatScriptProgram program = new CatScriptProgram();
+        program.setStart(tokenizer.getCurrentToken());
+        Expression expression = parseExpression();
+        if (tokenizer.hasMoreTokens()) {
+            tokenizer.reset();
+            while (tokenizer.hasMoreTokens()) {
+                program.addStatement(parseProgramStatement());
+            }
+        } else {
+            program.setExpression(expression);
+        }
+
+        program.setEnd(tokenizer.getCurrentToken());
+        return program;
     }
+
+    //============================================================
+    //  Statements
+    //============================================================
+
+    private Statement parseProgramStatement() {
+        Statement printStmt = parsePrintStatement();
+        if (printStmt != null) {
+            return printStmt;
+        }
+        return new SyntaxErrorStatement(tokenizer.consumeToken());
+    }
+
+    private Statement parsePrintStatement() {
+        if (tokenizer.match(PRINT)) {
+
+            PrintStatement printStatement = new PrintStatement();
+            printStatement.setStart(tokenizer.consumeToken());
+
+            require(LEFT_PAREN, printStatement);
+            printStatement.setExpression(parseExpression());
+            printStatement.setEnd(require(RIGHT_PAREN, printStatement));
+
+            return printStatement;
+        } else {
+            return null;
+        }
+    }
+
+    //============================================================
+    //  Expressions
+    //============================================================
 
     private Expression parseExpression() {
         return parseAdditiveExpression();
@@ -32,18 +77,43 @@ public class CatScriptParser {
     private Expression parseAdditiveExpression() {
         Expression expression = parsePrimaryExpression();
         while (tokenizer.match(PLUS, MINUS)) {
+
             Token operator = tokenizer.consumeToken();
+
             Expression rightHandSide = parsePrimaryExpression();
-            expression = new AdditiveExpression(operator, expression, rightHandSide);
+
+            AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
+
+            additiveExpression.setStart(expression.getStart());
+            additiveExpression.setEnd(rightHandSide.getEnd());
+
+            expression = additiveExpression;
         }
         return expression;
     }
 
     private Expression parsePrimaryExpression() {
         if (tokenizer.match(INTEGER)) {
-            return new IntegerLiteralExpression(tokenizer.consumeToken());
+            Token integerToken = tokenizer.consumeToken();
+            IntegerLiteralExpression integerExpression = new IntegerLiteralExpression(integerToken.getStringValue());
+            integerExpression.setToken(integerToken);
+            return integerExpression;
         } else {
-            return new SyntaxErrorExpression(tokenizer.consumeToken());
+            SyntaxErrorExpression syntaxErrorExpression = new SyntaxErrorExpression();
+            syntaxErrorExpression.setToken(tokenizer.consumeToken());
+            return syntaxErrorExpression;
+        }
+    }
+
+    //============================================================
+    //  Parse Helpers
+    //============================================================
+    private Token require(TokenType type, ParseElement elt) {
+        if(tokenizer.getCurrentToken().getType().equals(type)){
+            return tokenizer.consumeToken();
+        } else {
+            elt.addError("Unexpected Token", tokenizer.getCurrentToken());
+            return tokenizer.getCurrentToken();
         }
     }
 
