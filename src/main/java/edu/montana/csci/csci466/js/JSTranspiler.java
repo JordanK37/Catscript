@@ -14,20 +14,28 @@ import java.io.StringWriter;
 
 public class JSTranspiler {
 
-    public static String evalJS(String javascript) {
+    private final CatScriptProgram program;
+    private final String javascriptSource;
+
+    public JSTranspiler(CatScriptProgram program) {
+        this.program = program;
+        this.javascriptSource = transpile(program);
+    }
+
+    public String evaluate() {
         try {
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("javascript");
             ScriptContext context = engine.getContext();
             StringWriter writer = new StringWriter();
             context.setWriter(writer);
-            engine.eval(javascript);
+            engine.eval(javascriptSource);
             return writer.toString();
         } catch (ScriptException e) {
             return e.getMessage();
         }
     }
 
-    public static String transpile(CatScriptProgram program) {
+    private String transpile(CatScriptProgram program) {
         StringBuilder sb = new StringBuilder();
         if (program.getExpression() != null) {
             sb.append("print(");
@@ -39,7 +47,7 @@ public class JSTranspiler {
         return sb.toString();
     }
 
-    private static void transpileExpression(StringBuilder buffer, Expression expression) {
+    private void transpileExpression(StringBuilder buffer, Expression expression) {
         if (expression instanceof AdditiveExpression) {
             AdditiveExpression additiveExpression = (AdditiveExpression) expression;
             transpileExpression(buffer, additiveExpression.getLeftHandSide());
@@ -51,5 +59,9 @@ public class JSTranspiler {
         } else {
             throw new UnsupportedOperationException("Don't know how to transpile : " + expression);
         }
+    }
+
+    public String getJavascriptSource() {
+        return javascriptSource;
     }
 }

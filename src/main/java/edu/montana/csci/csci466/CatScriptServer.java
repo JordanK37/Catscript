@@ -66,8 +66,18 @@ class CatScriptServer {
         get("/transpile", (req, resp) -> {
             String source = req.queryParams("src");
             CatScriptProgram program = new CatScriptParser().parse(source);
-            String jsSource = JSTranspiler.transpile(program);
-            String output = JSTranspiler.evalJS(jsSource);
+            JSTranspiler jsTranspiler = new JSTranspiler(program);
+            String jsSource = jsTranspiler.getJavascriptSource();
+            String output = jsTranspiler.evaluate();
+            return "<pre>" + "\n\n  Source =================\n\n" + jsSource + "\n\n  Output =================\n\n" + output + "</pre>";
+        });
+
+        get("/compile", (req, resp) -> {
+            String source = req.queryParams("src");
+            CatScriptProgram program = new CatScriptParser().parse(source);
+            JSTranspiler jsTranspiler = new JSTranspiler(program);
+            String jsSource = jsTranspiler.getJavascriptSource();
+            String output = jsTranspiler.evaluate();
             return "<pre>" + "\n\n  Source =================\n\n" + jsSource + "\n\n  Output =================\n\n" + output + "</pre>";
         });
 
