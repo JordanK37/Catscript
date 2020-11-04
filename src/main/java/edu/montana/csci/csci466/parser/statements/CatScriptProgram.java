@@ -54,4 +54,7 @@ public class CatScriptProgram extends Statement {
         return statements;
     }
 
+    public boolean isExpression() {
+        return expression != null;
+    }
 }

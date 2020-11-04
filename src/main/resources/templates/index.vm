@@ -26,7 +26,7 @@
     <button hx-get="/parse">Parse</button>
     <button hx-get="/evaluate">Evaluate</button>
     <button hx-get="/transpile">Transpile</button>
-    <button>Compile</button>
+    <button hx-get="/compile">Compile</button>
 </div>
 
 <form style="margin-top: 8px">

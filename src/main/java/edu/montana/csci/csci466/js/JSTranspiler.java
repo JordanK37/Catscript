@@ -37,7 +37,7 @@ public class JSTranspiler {
 
     private String transpile(CatScriptProgram program) {
         StringBuilder sb = new StringBuilder();
-        if (program.getExpression() != null) {
+        if (program.isExpression()) {
             sb.append("print(");
             transpileExpression(sb, program.getExpression());
             sb.append(");\n");
