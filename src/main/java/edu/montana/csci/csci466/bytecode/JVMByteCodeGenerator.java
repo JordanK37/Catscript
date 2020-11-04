@@ -4,14 +4,16 @@ import edu.montana.csci.csci466.parser.expressions.AdditiveExpression;
 import edu.montana.csci.csci466.parser.expressions.Expression;
 import edu.montana.csci.csci466.parser.expressions.IntegerLiteralExpression;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
-import org.eclipse.jetty.websocket.common.OpCode;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.TraceClassVisitor;
+import org.objectweb.asm.tree.analysis.Interpreter;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -60,9 +62,23 @@ public class JVMByteCodeGenerator {
 
         classWriter.visitEnd();
 
-        PrintWriter pw = new PrintWriter(System.out);
+        byte[] classBytes = classWriter.toByteArray();
 
-        return loadClass(classWriter, dotClassName);
+        printClassASM(classBytes);
+
+        return loadClass(dotClassName, classBytes);
+    }
+
+    private void printClassASM(byte[] classBytes) {
+        StringWriter writer = new StringWriter();
+        var visitor = new TraceClassVisitor(new PrintWriter(writer));
+        CheckClassAdapter checkAdapter = new CheckClassAdapter(visitor);
+        ClassReader reader = new ClassReader(classBytes);
+        reader.accept(checkAdapter, 0);
+        String decompiledTransformedClass = writer.getBuffer().toString();
+        System.out.println(" JVM Bytecode ===================================\n");
+        System.out.println(decompiledTransformedClass);
+        System.out.println("\n ================================================");
     }
 
     private void compileExpression(MethodVisitor method, Expression expression) {
@@ -81,8 +97,7 @@ public class JVMByteCodeGenerator {
         }
     }
 
-    private CatScriptProgram loadClass(ClassWriter classWriter, String dotClassName) {
-        byte[] classBytes = classWriter.toByteArray();
+    private CatScriptProgram loadClass(String dotClassName, byte[] classBytes) {
         try {
             CLASS_LOADER.defineClass(dotClassName, classBytes);
             Class<?> clazz = CLASS_LOADER.loadClass(dotClassName);
