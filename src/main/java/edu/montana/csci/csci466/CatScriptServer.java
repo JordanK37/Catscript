@@ -1,6 +1,6 @@
 package edu.montana.csci.csci466;
 
-import edu.montana.csci.csci466.bytecode.JVMByteCodeGenerator;
+import edu.montana.csci.csci466.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci466.js.JSTranspiler;
 import edu.montana.csci.csci466.parser.CatScriptParser;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
@@ -76,7 +76,7 @@ class CatScriptServer {
         get("/compile", (req, resp) -> {
             String source = req.queryParams("src");
             CatScriptProgram program = new CatScriptParser().parse(source);
-            JVMByteCodeGenerator byteCodeGenerator = new JVMByteCodeGenerator(program);
+            ByteCodeGenerator byteCodeGenerator = new ByteCodeGenerator(program);
             CatScriptProgram compiledProgram = byteCodeGenerator.compileToBytecode();
             compiledProgram.execute();
             return compiledProgram.getOutput();

@@ -1,8 +1,9 @@
 package edu.montana.csci.csci466.parser.expressions;
 
-import edu.montana.csci.csci466.parser.ParseTreeVisitor;
+import edu.montana.csci.csci466.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci466.tokenizer.Token;
 import edu.montana.csci.csci466.tokenizer.TokenType;
+import org.objectweb.asm.Opcodes;
 
 public class AdditiveExpression extends Expression {
 
@@ -29,11 +30,6 @@ public class AdditiveExpression extends Expression {
         }
     }
 
-    @Override
-    public void accept(ParseTreeVisitor visitor) {
-        visitor.visit(this);
-    }
-
     public Expression getLeftHandSide() {
         return leftHandSide;
     }
@@ -44,5 +40,16 @@ public class AdditiveExpression extends Expression {
 
     public Expression getRightHandSide() {
         return rightHandSide;
+    }
+
+    @Override
+    public void compileToBytecode(ByteCodeGenerator code) {
+        getLeftHandSide().compileToBytecode(code);
+        getRightHandSide().compileToBytecode(code);
+        if (isAdd()) {
+            code.addInstruction(Opcodes.IADD);
+        } else {
+            code.addInstruction(Opcodes.ISUB);
+        }
     }
 }

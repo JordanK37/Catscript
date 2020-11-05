@@ -76,20 +76,14 @@ public class CatScriptParser {
 
     private Expression parseAdditiveExpression() {
         Expression expression = parsePrimaryExpression();
-        while (tokenizer.match(PLUS, MINUS)) {
-
+        if (tokenizer.match(PLUS, MINUS)) {
             Token operator = tokenizer.consumeToken();
-
-            Expression rightHandSide = parsePrimaryExpression();
-
+            final Expression rightHandSide = parseAdditiveExpression();
             AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
-
-            additiveExpression.setStart(expression.getStart());
-            additiveExpression.setEnd(rightHandSide.getEnd());
-
-            expression = additiveExpression;
+            return additiveExpression;
+        } else {
+            return expression;
         }
-        return expression;
     }
 
     private Expression parsePrimaryExpression() {

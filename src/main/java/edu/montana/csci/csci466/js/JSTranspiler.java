@@ -1,10 +1,7 @@
 package edu.montana.csci.csci466.js;
 
-import edu.montana.csci.csci466.parser.ParseTreeVisitor;
 import edu.montana.csci.csci466.parser.expressions.*;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
-import edu.montana.csci.csci466.parser.statements.PrintStatement;
-import edu.montana.csci.csci466.parser.statements.SyntaxErrorStatement;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;

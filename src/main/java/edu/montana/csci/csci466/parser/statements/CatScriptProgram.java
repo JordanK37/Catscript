@@ -1,12 +1,13 @@
 package edu.montana.csci.csci466.parser.statements;
 
-import edu.montana.csci.csci466.parser.ParseElement;
-import edu.montana.csci.csci466.parser.ParseTreeVisitor;
+import edu.montana.csci.csci466.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci466.parser.expressions.Expression;
-import edu.montana.csci.csci466.tokenizer.Token;
+import org.objectweb.asm.Opcodes;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static edu.montana.csci.csci466.bytecode.ByteCodeGenerator.internalNameFor;
 
 public class CatScriptProgram extends Statement {
 
@@ -42,8 +43,20 @@ public class CatScriptProgram extends Statement {
     }
 
     @Override
-    public void accept(ParseTreeVisitor visitor) {
-        visitor.visit(this);
+    public void compileToBytecode(ByteCodeGenerator code) {
+        if (isExpression()) {
+            code.addVarInstruction(Opcodes.ALOAD, 0);
+            getExpression().compileToBytecode(code);
+            code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Integer.class),
+                    "valueOf", "(I)Ljava/lang/Integer;", false);
+            code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, internalNameFor(CatScriptProgram.class),
+                    "print", "(Ljava/lang/Object;)V", false);
+            code.addInstruction(Opcodes.RETURN);
+        } else {
+            for (Statement statement : statements) {
+                statement.compileToBytecode(code);
+            }
+        }
     }
 
     public Expression getExpression() {

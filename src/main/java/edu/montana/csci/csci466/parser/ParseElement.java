@@ -1,8 +1,8 @@
 package edu.montana.csci.csci466.parser;
 
+import edu.montana.csci.csci466.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
 import edu.montana.csci.csci466.tokenizer.Token;
-import org.apache.velocity.runtime.directive.Parse;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -75,8 +75,6 @@ public abstract class ParseElement {
         return element;
     }
 
-    abstract public void accept(ParseTreeVisitor visitor);
-
     public List<ParseElement> getChildren() {
         return children;
     }
@@ -85,4 +83,6 @@ public abstract class ParseElement {
     public String toString() {
         return this.getClass().getSimpleName();
     }
+
+    public abstract void compileToBytecode(ByteCodeGenerator code);
 }

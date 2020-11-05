@@ -1,7 +1,6 @@
 package edu.montana.csci.csci466.parser.expressions;
 
-import edu.montana.csci.csci466.parser.ParseTreeVisitor;
-import edu.montana.csci.csci466.tokenizer.Token;
+import edu.montana.csci.csci466.bytecode.ByteCodeGenerator;
 
 public class IntegerLiteralExpression extends Expression {
     private final int integerVal;
@@ -16,12 +15,12 @@ public class IntegerLiteralExpression extends Expression {
     }
 
     @Override
-    public void accept(ParseTreeVisitor visitor) {
-        visitor.visit(this);
+    public String toString() {
+        return integerVal + "";
     }
 
     @Override
-    public String toString() {
-        return integerVal + "";
+    public void compileToBytecode(ByteCodeGenerator code) {
+        code.loadConstantValue(integerVal);
     }
 }
