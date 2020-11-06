@@ -1,24 +1,10 @@
 package edu.montana.csci.csci466.tokenizer;
 
-import org.slf4j.MDC;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static edu.montana.csci.csci466.tokenizer.TokenType.*;
 
 public class CatScriptTokenizer {
 
-    private static final Map<String, TokenType> KEYWORDS = new HashMap<>();
-    static {
-        KEYWORDS.put("print", PRINT);
-    }
-
-    List<Token> tokens = new ArrayList<>();
-    int currentToken = 0;
-
+    TokenList tokenList;
     String src;
     int postion = 0;
     int line = 1;
@@ -26,16 +12,17 @@ public class CatScriptTokenizer {
 
     public CatScriptTokenizer(String source) {
         src = source;
+        tokenList = new TokenList(this);
         tokenize();
     }
 
     private void tokenize() {
         consumeWhitespace();
-        while (!isAtEnd()) {
+        while (!tokenizationEnd()) {
             scanToken();
             consumeWhitespace();
         }
-        addToken(EOF, "<EOF>");
+        tokenList.addToken(EOF, "<EOF>", postion, postion, line, lineOffset);
     }
 
     private void scanToken() {
@@ -47,16 +34,14 @@ public class CatScriptTokenizer {
         }
         if(scanIdentifier()) {
             return;
+        } else {
+            scanSyntax();
         }
-        if (scanSyntax()) {
-            return;
-        }
-        addToken(ERROR, "<Unexpected Token: [" + peek() + "]>");
         postion++;
     }
 
     private boolean scanString() {
-        // TODO implement
+        // TODO implement string scanning here!
         return false;
     }
 
@@ -64,13 +49,13 @@ public class CatScriptTokenizer {
         if( isAlpha(peek())) {
             int start = postion;
             while (isAlphaNumeric(peek())) {
-                postion++;
+                takeChar();
             }
             String value = src.substring(start, postion);
             if (KEYWORDS.containsKey(value)) {
-                addToken(KEYWORDS.get(value), value);
+                tokenList.addToken(KEYWORDS.get(value), value, start, postion, line, lineOffset);
             } else {
-                addToken(IDENTIFIER, value);
+                tokenList.addToken(IDENTIFIER, value, start, postion, line, lineOffset);
             }
             return true;
         } else {
@@ -79,49 +64,45 @@ public class CatScriptTokenizer {
     }
 
     private boolean scanNumber() {
-        if( isDigit(peek())) {
+        if(isDigit(peek())) {
             int start = postion;
             while (isDigit(peek())) {
-                postion++;
+                takeChar();
             }
-            addToken(INTEGER, src.substring(start, postion));
+            tokenList.addToken(INTEGER, src.substring(start, postion), start, postion, line, lineOffset);
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean scanSyntax() {
-        char c = takeToken();
-
-        if(c == '+') {
-            addToken(PLUS, "+");
-            return true;
-        };
-        if(c == '-') {
-            addToken(MINUS, "-");
-            return true;
-        };
-        if(c == '(') {
-            addToken(LEFT_PAREN, "(");
-            return true;
-        };
-        if(c == ')') {
-            addToken(RIGHT_PAREN, ")");
-            return true;
-        };
-
-        return false;
+    private void scanSyntax() {
+        // TODO - implement rest of syntax scanning
+        //      - implement comments
+        int start = postion;
+        if(match('+')) {
+            tokenList.addToken(PLUS, "+", start, postion, line, lineOffset);
+        } else if(match('-')) {
+            tokenList.addToken(MINUS, "-", start, postion, line, lineOffset);
+        } else if(match('=')) {
+            if (match('=')) {
+                tokenList.addToken(EQUAL_EQUAL, "==", start, postion, line, lineOffset);
+            } else {
+                tokenList.addToken(EQUAL, "=", start, postion, line, lineOffset);
+            }
+        } else {
+            tokenList.addToken(ERROR, "<Unexpected Token: [" + takeChar() + "]>", start, postion, line, lineOffset);
+        }
     }
 
     private void consumeWhitespace() {
         // TODO update line and lineOffsets
-        while (!isAtEnd()) {
-            char peek = peek();
-            if (peek == ' ' || peek == '\r' || peek == '\t') {
+        while (!tokenizationEnd()) {
+            char c = peek();
+            if (c == ' ' || c == '\r' || c == '\t') {
                 postion++;
                 continue;
-            } else if (peek == '\n') {
+            } else if (c == '\n') {
                 postion++;
                 continue;
             }
@@ -134,7 +115,7 @@ public class CatScriptTokenizer {
     //===============================================================
 
     private char peek() {
-        if (isAtEnd()) return '\0';
+        if (tokenizationEnd()) return '\0';
         return src.charAt(postion);
     }
 
@@ -152,63 +133,25 @@ public class CatScriptTokenizer {
         return c >= '0' && c <= '9';
     }
 
-    private char takeToken() {
+    private char takeChar() {
         char c = src.charAt(postion);
-        postion = postion + 1;
+        postion++;
         return c;
     }
 
-    private boolean isAtEnd() {
+    private boolean tokenizationEnd() {
         return postion >= src.length();
     }
 
-    private void addToken(TokenType eof, String stringValue) {
-        tokens.add(newToken(eof, stringValue));
-    }
-
-    private Token newToken(TokenType type, String stringValue) {
-        return new Token(postion, postion, line, lineOffset, stringValue, type);
-    }
-
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public boolean matchKeyword(String keyword) {
-        Token token = getCurrentToken();
-        return token.getType().equals(IDENTIFIER) && token.getStringValue().equals(keyword);
-    }
-
-    public Token getCurrentToken() {
-        if (currentToken < tokens.size()) {
-            return tokens.get(currentToken);
-        } else {
-            return Token.EOF_TOKEN;
-        }
-    }
-
-    public Token consumeToken() {
-        return tokens.get(currentToken++);
-    }
-
-    public boolean match(TokenType... type) {
-        for (TokenType tokenType : type) {
-            if (getCurrentToken().getType().equals(tokenType)) {
-                return true;
-            }
+    public boolean match(char c) {
+        if (peek() == c) {
+            takeChar();
+            return true;
         }
         return false;
     }
 
-    public void reset() {
-        currentToken = 0;
-    }
-
-    public boolean hasMoreTokens() {
-        return !getCurrentToken().getType().equals(EOF);
-    }
-
-    public Token lastToken() {
-        return tokens.get(Math.max(0, currentToken - 1));
+    public TokenList getTokens() {
+        return tokenList;
     }
 }
