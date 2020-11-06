@@ -2,20 +2,18 @@ package edu.montana.csci.csci466.tokenizer;
 
 public class Token {
 
-    public static final Token EOF_TOKEN = new Token(0,0,0,0, "<EOF>", TokenType.EOF);
-
     int start;
     int end;
     int line;
-    int offset;
+    int lineOffset;
     String stringValue;
     TokenType type;
 
-    public Token(int start, int end, int line, int offset, String stringValue, TokenType type) {
+    public Token(int start, int end, int line, int lineOffset, String stringValue, TokenType type) {
         this.start = start;
         this.end = end;
         this.line = line;
-        this.offset = offset;
+        this.lineOffset = lineOffset;
         this.stringValue = stringValue;
         this.type = type;
     }
@@ -32,8 +30,8 @@ public class Token {
         return line;
     }
 
-    public int getOffset() {
-        return offset;
+    public int getLineOffset() {
+        return lineOffset;
     }
 
     public String getStringValue() {
@@ -51,7 +49,7 @@ public class Token {
                 ", start=" + start +
                 ", end=" + end +
                 ", line=" + line +
-                ", offset=" + offset +
+                ", offset=" + lineOffset +
                 '}';
     }
 }

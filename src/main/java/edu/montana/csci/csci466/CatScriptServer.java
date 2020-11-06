@@ -6,6 +6,7 @@ import edu.montana.csci.csci466.parser.CatScriptParser;
 import edu.montana.csci.csci466.parser.statements.CatScriptProgram;
 import edu.montana.csci.csci466.tokenizer.CatScriptTokenizer;
 import edu.montana.csci.csci466.tokenizer.Token;
+import edu.montana.csci.csci466.tokenizer.TokenList;
 import edu.montana.csci.csci466.util.HTMLParseTreeRenderer;
 import edu.montana.csci.csci466.util.Web;
 import spark.Spark;
@@ -45,7 +46,7 @@ class CatScriptServer {
 
         get("/tokenize", (req, resp) -> {
             String source = req.queryParams("src");
-            List<Token> tokens = new CatScriptTokenizer(source).getTokens();
+            TokenList tokens = new CatScriptTokenizer(source).getTokens();
             return "<pre>" +
                     tokens.stream().map(token -> token.toString() + "\n").collect(Collectors.toList()) +
                     "</pr>";

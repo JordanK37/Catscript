@@ -10,31 +10,32 @@ import edu.montana.csci.csci466.parser.statements.Statement;
 import edu.montana.csci.csci466.parser.statements.SyntaxErrorStatement;
 import edu.montana.csci.csci466.tokenizer.CatScriptTokenizer;
 import edu.montana.csci.csci466.tokenizer.Token;
+import edu.montana.csci.csci466.tokenizer.TokenList;
 import edu.montana.csci.csci466.tokenizer.TokenType;
 
 import static edu.montana.csci.csci466.tokenizer.TokenType.*;
 
 public class CatScriptParser {
 
-    CatScriptTokenizer tokenizer;
+    TokenList tokens;
 
     public CatScriptProgram parse(String source) {
-        tokenizer = new CatScriptTokenizer(source);
+        tokens = new CatScriptTokenizer(source).getTokens();
 
         // first parse an expression
         CatScriptProgram program = new CatScriptProgram();
-        program.setStart(tokenizer.getCurrentToken());
+        program.setStart(tokens.getCurrentToken());
         Expression expression = parseExpression();
-        if (tokenizer.hasMoreTokens()) {
-            tokenizer.reset();
-            while (tokenizer.hasMoreTokens()) {
+        if (tokens.hasMoreTokens()) {
+            tokens.reset();
+            while (tokens.hasMoreTokens()) {
                 program.addStatement(parseProgramStatement());
             }
         } else {
             program.setExpression(expression);
         }
 
-        program.setEnd(tokenizer.getCurrentToken());
+        program.setEnd(tokens.getCurrentToken());
         return program;
     }
 
@@ -47,14 +48,14 @@ public class CatScriptParser {
         if (printStmt != null) {
             return printStmt;
         }
-        return new SyntaxErrorStatement(tokenizer.consumeToken());
+        return new SyntaxErrorStatement(tokens.consumeToken());
     }
 
     private Statement parsePrintStatement() {
-        if (tokenizer.match(PRINT)) {
+        if (tokens.match(PRINT)) {
 
             PrintStatement printStatement = new PrintStatement();
-            printStatement.setStart(tokenizer.consumeToken());
+            printStatement.setStart(tokens.consumeToken());
 
             require(LEFT_PAREN, printStatement);
             printStatement.setExpression(parseExpression());
@@ -76,8 +77,8 @@ public class CatScriptParser {
 
     private Expression parseAdditiveExpression() {
         Expression expression = parsePrimaryExpression();
-        if (tokenizer.match(PLUS, MINUS)) {
-            Token operator = tokenizer.consumeToken();
+        if (tokens.match(PLUS, MINUS)) {
+            Token operator = tokens.consumeToken();
             final Expression rightHandSide = parseAdditiveExpression();
             AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
             additiveExpression.setStart(expression.getStart());
@@ -89,14 +90,14 @@ public class CatScriptParser {
     }
 
     private Expression parsePrimaryExpression() {
-        if (tokenizer.match(INTEGER)) {
-            Token integerToken = tokenizer.consumeToken();
+        if (tokens.match(INTEGER)) {
+            Token integerToken = tokens.consumeToken();
             IntegerLiteralExpression integerExpression = new IntegerLiteralExpression(integerToken.getStringValue());
             integerExpression.setToken(integerToken);
             return integerExpression;
         } else {
             SyntaxErrorExpression syntaxErrorExpression = new SyntaxErrorExpression();
-            syntaxErrorExpression.setToken(tokenizer.consumeToken());
+            syntaxErrorExpression.setToken(tokens.consumeToken());
             return syntaxErrorExpression;
         }
     }
@@ -105,11 +106,11 @@ public class CatScriptParser {
     //  Parse Helpers
     //============================================================
     private Token require(TokenType type, ParseElement elt) {
-        if(tokenizer.getCurrentToken().getType().equals(type)){
-            return tokenizer.consumeToken();
+        if(tokens.getCurrentToken().getType().equals(type)){
+            return tokens.consumeToken();
         } else {
-            elt.addError("Unexpected Token", tokenizer.getCurrentToken());
-            return tokenizer.getCurrentToken();
+            elt.addError("Unexpected Token", tokens.getCurrentToken());
+            return tokens.getCurrentToken();
         }
     }
 
