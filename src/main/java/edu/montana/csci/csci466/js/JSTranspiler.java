@@ -34,28 +34,8 @@ public class JSTranspiler {
 
     private String transpile(CatScriptProgram program) {
         StringBuilder sb = new StringBuilder();
-        if (program.isExpression()) {
-            sb.append("print(");
-            transpileExpression(sb, program.getExpression());
-            sb.append(");\n");
-        } else {
-            // TODO implement statements
-        }
+        program.transpile(sb);
         return sb.toString();
-    }
-
-    private void transpileExpression(StringBuilder buffer, Expression expression) {
-        if (expression instanceof AdditiveExpression) {
-            AdditiveExpression additiveExpression = (AdditiveExpression) expression;
-            transpileExpression(buffer, additiveExpression.getLeftHandSide());
-            buffer.append(additiveExpression.isAdd() ? " + " : " - ");
-            transpileExpression(buffer, additiveExpression.getRightHandSide());
-        } else if (expression instanceof IntegerLiteralExpression) {
-            IntegerLiteralExpression integerLiteral = (IntegerLiteralExpression) expression;
-            buffer.append(integerLiteral.evaluate());
-        } else {
-            throw new UnsupportedOperationException("Don't know how to transpile : " + expression);
-        }
     }
 
     public String getJavascriptSource() {

@@ -98,6 +98,10 @@ public class CatScriptTokenizer {
             addToken(PLUS, "+");
             return true;
         };
+        if(c == '-') {
+            addToken(MINUS, "-");
+            return true;
+        };
         if(c == '(') {
             addToken(LEFT_PAREN, "(");
             return true;

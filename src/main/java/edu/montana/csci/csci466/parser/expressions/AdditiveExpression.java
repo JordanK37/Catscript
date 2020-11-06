@@ -43,13 +43,25 @@ public class AdditiveExpression extends Expression {
     }
 
     @Override
-    public void compileToBytecode(ByteCodeGenerator code) {
-        getLeftHandSide().compileToBytecode(code);
-        getRightHandSide().compileToBytecode(code);
+    public void transpile(StringBuilder javascript) {
+        getLeftHandSide().transpile(javascript);
+        javascript.append(isAdd() ? " + " : " - ");
+        getRightHandSide().transpile(javascript);
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        getLeftHandSide().compile(code);
+        getRightHandSide().compile(code);
         if (isAdd()) {
             code.addInstruction(Opcodes.IADD);
         } else {
             code.addInstruction(Opcodes.ISUB);
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "[" + operator.getStringValue() + "]";
     }
 }

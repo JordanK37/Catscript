@@ -80,6 +80,8 @@ public class CatScriptParser {
             Token operator = tokenizer.consumeToken();
             final Expression rightHandSide = parseAdditiveExpression();
             AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
+            additiveExpression.setStart(expression.getStart());
+            additiveExpression.setEnd(rightHandSide.getEnd());
             return additiveExpression;
         } else {
             return expression;

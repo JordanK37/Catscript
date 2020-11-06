@@ -10,17 +10,22 @@ public class IntegerLiteralExpression extends Expression {
     }
 
     @Override
-    public Object evaluate() {
-        return integerVal;
-    }
-
-    @Override
     public String toString() {
         return integerVal + "";
     }
 
     @Override
-    public void compileToBytecode(ByteCodeGenerator code) {
+    public Object evaluate() {
+        return integerVal;
+    }
+
+    @Override
+    public void transpile(StringBuilder javascript) {
+        javascript.append(integerVal);
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
         code.loadConstantValue(integerVal);
     }
 }

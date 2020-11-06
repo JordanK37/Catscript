@@ -84,5 +84,7 @@ public abstract class ParseElement {
         return this.getClass().getSimpleName();
     }
 
-    public abstract void compileToBytecode(ByteCodeGenerator code);
+    public abstract void transpile(StringBuilder javascript);
+
+    public abstract void compile(ByteCodeGenerator code);
 }

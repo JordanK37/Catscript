@@ -31,6 +31,18 @@ public class CatScriptProgram extends Statement {
         this.expression = addChild(expression);
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public boolean isExpression() {
+        return expression != null;
+    }
+
     @Override
     public void execute() {
         if (expression != null) {
@@ -43,10 +55,23 @@ public class CatScriptProgram extends Statement {
     }
 
     @Override
-    public void compileToBytecode(ByteCodeGenerator code) {
+    public void transpile(StringBuilder javascript) {
+        if (isExpression()) {
+            javascript.append("print(");
+            expression.transpile(javascript);
+            javascript.append(");\n");
+        } else {
+            for (Statement statement : statements) {
+                statement.transpile(javascript);
+            }
+        }
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
         if (isExpression()) {
             code.addVarInstruction(Opcodes.ALOAD, 0);
-            getExpression().compileToBytecode(code);
+            getExpression().compile(code);
             code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Integer.class),
                     "valueOf", "(I)Ljava/lang/Integer;", false);
             code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, internalNameFor(CatScriptProgram.class),
@@ -54,20 +79,9 @@ public class CatScriptProgram extends Statement {
             code.addInstruction(Opcodes.RETURN);
         } else {
             for (Statement statement : statements) {
-                statement.compileToBytecode(code);
+                statement.compile(code);
             }
         }
     }
 
-    public Expression getExpression() {
-        return expression;
-    }
-
-    public List<Statement> getStatements() {
-        return statements;
-    }
-
-    public boolean isExpression() {
-        return expression != null;
-    }
 }

@@ -39,7 +39,7 @@ public class ByteCodeGenerator {
             constructor.addInstruction(Opcodes.RETURN);
         }
         executeMethod = makeMethod(Opcodes.ACC_PUBLIC, "execute", "()V");
-        program.compileToBytecode(this);
+        program.compile(this);
         executeMethod.close();
 
         classWriter.visitEnd();

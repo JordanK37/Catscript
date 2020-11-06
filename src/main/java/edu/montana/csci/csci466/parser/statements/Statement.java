@@ -4,10 +4,19 @@ import edu.montana.csci.csci466.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci466.parser.ParseElement;
 
 public abstract class Statement extends ParseElement {
-    abstract void execute();
+
+    public void execute() {
+        throw new UnsupportedOperationException("execute needs to be implemented for " + this.getClass().getName());
+    }
 
     @Override
-    public void compileToBytecode(ByteCodeGenerator code) {
-        throw new UnsupportedOperationException("compileToBytecode needs to be implemented for " + this.getClass().getName());
+    public void transpile(StringBuilder javascript) {
+        throw new UnsupportedOperationException("transpile needs to be implemented for " + this.getClass().getName());
     }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        throw new UnsupportedOperationException("compile needs to be implemented for " + this.getClass().getName());
+    }
+
 }

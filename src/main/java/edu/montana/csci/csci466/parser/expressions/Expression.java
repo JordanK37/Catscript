@@ -6,11 +6,16 @@ import edu.montana.csci.csci466.tokenizer.Token;
 
 public abstract class Expression extends ParseElement {
     public Object evaluate() {
-        return null;
+        throw new UnsupportedOperationException("evaluate needs to be implemented for " + this.getClass().getName());
     }
 
     @Override
-    public void compileToBytecode(ByteCodeGenerator code) {
-        throw new UnsupportedOperationException("compileToBytecode needs to be implemented for " + this.getClass().getName());
+    public void transpile(StringBuilder javascript) {
+        throw new UnsupportedOperationException("transpile needs to be implemented for " + this.getClass().getName());
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        throw new UnsupportedOperationException("compile needs to be implemented for " + this.getClass().getName());
     }
 }
