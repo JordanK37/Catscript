@@ -8,7 +8,6 @@ import org.objectweb.asm.Opcodes;
 public class AdditiveExpression extends Expression {
 
     private final Token operator;
-    private final boolean add;
     private final Expression leftHandSide;
     private final Expression rightHandSide;
 
@@ -16,30 +15,27 @@ public class AdditiveExpression extends Expression {
         this.leftHandSide = addChild(leftHandSide);
         this.rightHandSide = addChild(rightHandSide);
         this.operator = operator;
-        this.add = operator.getType() == TokenType.PLUS;
+    }
+
+    public Expression getLeftHandSide() {
+        return leftHandSide;
+    }
+    public Expression getRightHandSide() {
+        return rightHandSide;
+    }
+    public boolean isAdd() {
+        return operator.getType() == TokenType.PLUS;
     }
 
     @Override
     public Object evaluate() {
         Integer lhsValue = (Integer) leftHandSide.evaluate();
         Integer rhsValue = (Integer) rightHandSide.evaluate();
-        if (add) {
+        if (isAdd()) {
             return lhsValue + rhsValue;
         } else {
             return lhsValue - rhsValue;
         }
-    }
-
-    public Expression getLeftHandSide() {
-        return leftHandSide;
-    }
-
-    public boolean isAdd() {
-        return add;
-    }
-
-    public Expression getRightHandSide() {
-        return rightHandSide;
     }
 
     @Override
