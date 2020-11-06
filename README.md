@@ -15,6 +15,7 @@ program_statement = statement |
 statement = for_statement |
             if_statement |
             print_statement |
+            variable_statement |
             assignment_statement |
             function_invocation;
 
@@ -24,7 +25,9 @@ if_statement = 'if', '(', expression, ')', '{', { statement }, '}' [ 'else', '{'
 
 print_statement = 'print', '(', expression, ')'
 
-assignment_statement = identifier, [':', type_expression, ] '=', expression;
+variable_statement = 'var', identifier, [':', type_expression, ] '=', expression;
+
+assignment_statement = identifier, '=', expression;
 
 function_declaration = 'function', identifier, '(', parameter_list, ')' + 
                        [ ':' + type_expression ] + "{" + { function_body_statement } + "}";
