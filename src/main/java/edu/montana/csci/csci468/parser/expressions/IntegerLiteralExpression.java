@@ -9,6 +9,10 @@ public class IntegerLiteralExpression extends Expression {
         this.integerVal = Integer.parseInt(value);
     }
 
+    public int getValue() {
+        return integerVal;
+    }
+
     @Override
     public String toString() {
         return integerVal + "";

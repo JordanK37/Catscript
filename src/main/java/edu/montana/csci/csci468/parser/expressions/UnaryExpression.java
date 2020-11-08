@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.tokenizer.Token;
+import edu.montana.csci.csci468.tokenizer.TokenType;
 
 public class UnaryExpression extends Expression {
 
@@ -14,6 +15,14 @@ public class UnaryExpression extends Expression {
 
     public Expression getRightHandSide() {
         return rightHandSide;
+    }
+
+    public boolean isMinus() {
+        return operator.getType().equals(TokenType.MINUS);
+    }
+
+    public boolean isNot() {
+        return !isMinus();
     }
 
     @Override

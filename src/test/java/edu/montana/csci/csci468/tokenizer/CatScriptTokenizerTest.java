@@ -56,17 +56,19 @@ public class CatScriptTokenizerTest {
 
     @Test
     public void basicKeywords(){
-        assertTokensAre("else false function for if null print return true var",
-                ELSE, FALSE, FUNCTION, FOR, IF, NULL,
+        assertTokensAre("else false function for if not null print return true var",
+                ELSE, FALSE, FUNCTION, FOR, IF, NOT, NULL,
                 PRINT, RETURN, TRUE, VAR, EOF);
     }
 
     @Test
     public void basicSyntax(){
-        assertTokensAre("( ) { } , . - + / * ! != = == > >= < <=",
-                LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
+        assertTokensAre("( ) { } [ ] , . - + / * != = == > >= < <=",
+                LEFT_PAREN, RIGHT_PAREN,
+                LEFT_BRACE, RIGHT_BRACE,
+                LEFT_BRACKET, RIGHT_BRACKET,
                 COMMA, DOT, MINUS, PLUS, SLASH, STAR,
-                BANG, BANG_EQUAL,
+                BANG_EQUAL,
                 EQUAL, EQUAL_EQUAL,
                 GREATER, GREATER_EQUAL,
                 LESS, LESS_EQUAL, EOF);
@@ -77,6 +79,17 @@ public class CatScriptTokenizerTest {
         assertTokensAre("/ //   //// asdfasdf \"asdf\"\n" +
                         "  / // asdf",
                 SLASH, SLASH, EOF);
+    }
+
+    @Test
+    public void compoundTokensTokenizeProperly() {
+        assertTokensAre("1+2", INTEGER, PLUS, INTEGER, EOF);
+        assertTokensAre("\"\".\"\"", STRING, DOT, STRING, EOF);
+    }
+
+    @Test
+    public void listLiteralTokenization() {
+        assertTokensAre("[1, 2, 3]", LEFT_BRACKET, INTEGER, COMMA, INTEGER, COMMA, INTEGER, RIGHT_BRACKET, EOF);
     }
 
     @Test

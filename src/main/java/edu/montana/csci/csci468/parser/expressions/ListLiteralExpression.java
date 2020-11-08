@@ -13,4 +13,7 @@ public class ListLiteralExpression extends Expression {
         }
     }
 
+    public List<Expression> getValues() {
+        return values;
+    }
 }

@@ -6,6 +6,7 @@ import edu.montana.csci.csci468.tokenizer.Token;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class ParseElement {
 
@@ -87,4 +88,8 @@ public abstract class ParseElement {
     public abstract void transpile(StringBuilder javascript);
 
     public abstract void compile(ByteCodeGenerator code);
+
+    public boolean hasError(String errorMessage) {
+        return errors.stream().anyMatch(parseError -> Objects.equals(parseError.getMessage(), errorMessage));
+    }
 }

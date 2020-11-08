@@ -31,6 +31,15 @@ public class TokenList implements Iterable<Token> {
         return tokens.get(currentToken++);
     }
 
+    public boolean matchAndConsume(TokenType... type) {
+        if (match(type)) {
+            consumeToken();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean match(TokenType... type) {
         for (TokenType tokenType : type) {
             if (getCurrentToken().getType().equals(tokenType)) {
@@ -70,4 +79,5 @@ public class TokenList implements Iterable<Token> {
     public Spliterator<Token> spliterator() {
         return tokens.spliterator();
     }
+
 }

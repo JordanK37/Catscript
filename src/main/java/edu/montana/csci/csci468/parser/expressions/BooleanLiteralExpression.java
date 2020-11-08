@@ -7,4 +7,7 @@ public class BooleanLiteralExpression extends Expression {
         this.booleanValue = value;
     }
 
+    public boolean getValue() {
+        return booleanValue;
+    }
 }

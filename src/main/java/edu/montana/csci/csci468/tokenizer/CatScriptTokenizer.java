@@ -34,10 +34,8 @@ public class CatScriptTokenizer {
         }
         if(scanIdentifier()) {
             return;
-        } else {
-            scanSyntax();
         }
-        postion++;
+        scanSyntax();
     }
 
     private boolean scanString() {
@@ -80,12 +78,12 @@ public class CatScriptTokenizer {
         // TODO - implement rest of syntax scanning
         //      - implement comments
         int start = postion;
-        if(match('+')) {
+        if(matchAndConsume('+')) {
             tokenList.addToken(PLUS, "+", start, postion, line, lineOffset);
-        } else if(match('-')) {
+        } else if(matchAndConsume('-')) {
             tokenList.addToken(MINUS, "-", start, postion, line, lineOffset);
-        } else if(match('=')) {
-            if (match('=')) {
+        } else if(matchAndConsume('=')) {
+            if (matchAndConsume('=')) {
                 tokenList.addToken(EQUAL_EQUAL, "==", start, postion, line, lineOffset);
             } else {
                 tokenList.addToken(EQUAL, "=", start, postion, line, lineOffset);
@@ -143,7 +141,7 @@ public class CatScriptTokenizer {
         return postion >= src.length();
     }
 
-    public boolean match(char c) {
+    public boolean matchAndConsume(char c) {
         if (peek() == c) {
             takeChar();
             return true;

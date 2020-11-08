@@ -7,4 +7,7 @@ public class StringLiteralExpression extends Expression {
         this.stringValue = value;
     }
 
+    public String getValue() {
+        return stringValue;
+    }
 }
