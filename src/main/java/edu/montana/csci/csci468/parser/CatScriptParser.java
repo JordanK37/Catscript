@@ -40,6 +40,7 @@ public class CatScriptParser {
     }
 
     public CatScriptProgram parseAsExpression(String source) {
+        tokens = new CatScriptTokenizer(source).getTokens();
         CatScriptProgram program = new CatScriptProgram();
         program.setStart(tokens.getCurrentToken());
         Expression expression = parseExpression();

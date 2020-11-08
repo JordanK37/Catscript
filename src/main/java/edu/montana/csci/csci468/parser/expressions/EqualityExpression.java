@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.tokenizer.Token;
+import edu.montana.csci.csci468.tokenizer.TokenType;
 
 public class EqualityExpression extends Expression {
 
@@ -25,5 +26,9 @@ public class EqualityExpression extends Expression {
     @Override
     public String toString() {
         return super.toString() + "[" + operator.getStringValue() + "]";
+    }
+
+    public boolean isEqual() {
+        return operator.getType().equals(TokenType.EQUAL_EQUAL);
     }
 }

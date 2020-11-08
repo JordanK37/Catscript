@@ -53,7 +53,8 @@ factor_expression = unary_expression { ("/" | "*" ) unary_expression };
 
 unary_expression = ( "not" | "-" ) unary_expression | primary_expression;
 
-primary_expression = IDENTIFIER | STRING | INTEGER | "true" | "false" | "null"| list_literal | function_call
+primary_expression = IDENTIFIER | STRING | INTEGER | "true" | "false" | "null"| 
+                     list_literal | function_call | "(", expression, ")"
 
 list_literal = '[', expr, [ { ',', expr } ] ']'; 
 

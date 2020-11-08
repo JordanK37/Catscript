@@ -161,6 +161,42 @@ public class CatscriptParserExpressionsTest {
         assertTrue(expr.getRightHandSide() instanceof IntegerLiteralExpression);
     }
 
+    @Test
+    public void lessThanExpression() {
+        ComparisonExpression expr = parseExpression("1 < 1");
+        assertTrue(expr.isLessThan());
+    }
+
+    @Test
+    public void lessThanGreaterExpression() {
+        ComparisonExpression expr = parseExpression("1 <= 1");
+        assertTrue(expr.isLessThanOrEqual());
+    }
+
+    @Test
+    public void greaterThanExpression() {
+        ComparisonExpression expr = parseExpression("1 > 1");
+        assertTrue(expr.isGreater());
+    }
+
+    @Test
+    public void greaterThanGreaterExpression() {
+        ComparisonExpression expr = parseExpression("1 >= 1");
+        assertTrue(expr.isGreaterThanOrEqual());
+    }
+
+    @Test
+    public void equalityExpression() {
+        EqualityExpression expr = parseExpression("1 == 1");
+        assertTrue(expr.isEqual());
+    }
+
+    @Test
+    public void notEqualExpression() {
+        EqualityExpression expr = parseExpression("1 != 1");
+        assertFalse(expr.isEqual());
+    }
+
 
     private <T> T parseExpression(String source) {
         return parseExpression(source, true);
