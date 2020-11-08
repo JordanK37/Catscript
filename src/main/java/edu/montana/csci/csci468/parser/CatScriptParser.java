@@ -39,6 +39,15 @@ public class CatScriptParser {
         return program;
     }
 
+    public CatScriptProgram parseAsExpression(String source) {
+        CatScriptProgram program = new CatScriptProgram();
+        program.setStart(tokens.getCurrentToken());
+        Expression expression = parseExpression();
+        program.setExpression(expression);
+        program.setEnd(tokens.getCurrentToken());
+        return program;
+    }
+
     //============================================================
     //  Statements
     //============================================================

@@ -26,6 +26,22 @@ public class CatscriptParserExpressionsTest {
     }
 
     @Test
+    public void additiveExpressionsAreLeftAssociative() {
+        AdditiveExpression expr = parseExpression("1 + 1 + 1");
+        assertTrue(expr.isAdd());
+        assertTrue(expr.getLeftHandSide() instanceof AdditiveExpression);
+        assertTrue(expr.getRightHandSide() instanceof IntegerLiteralExpression);
+    }
+
+    @Test
+    public void additiveExpressionsCanBeParenthesized() {
+        AdditiveExpression expr = parseExpression("1 + (1 + 1)");
+        assertTrue(expr.isAdd());
+        assertTrue(expr.getLeftHandSide() instanceof IntegerLiteralExpression);
+        assertTrue(expr.getRightHandSide() instanceof AdditiveExpression);
+    }
+
+    @Test
     public void parseSubtractionExpressionWorks() {
         AdditiveExpression expr = parseExpression("1 - 1");
         assertFalse(expr.isAdd());
@@ -69,7 +85,7 @@ public class CatscriptParserExpressionsTest {
 
     @Test
     public void parseUnterminatedListLiteralExpression() {
-        ListLiteralExpression expr = parseExpression("[1, 2");
+        ListLiteralExpression expr = parseExpression("[1, 2", false);
         assertEquals(2, expr.getValues().size());
         assertTrue(expr.hasError(ParseError.UNTERMINATED_LIST));
     }
@@ -90,7 +106,7 @@ public class CatscriptParserExpressionsTest {
 
     @Test
     public void parseUnterminatedFunctionCallExpression() {
-        FunctionCallExpression expr = parseExpression("foo(1, 2");
+        FunctionCallExpression expr = parseExpression("foo(1, 2", false);
         assertEquals("foo", expr.getName());
         assertEquals(2, expr.getArguments().size());
         assertTrue(expr.hasError(ParseError.UNTERMINATED_ARG_LIST));
@@ -137,10 +153,25 @@ public class CatscriptParserExpressionsTest {
         assertTrue(expr.getRightHandSide() instanceof FactorExpression);
     }
 
+    @Test
+    public void factorExpressionsAreLeftAssociative() {
+        FactorExpression expr = parseExpression("1 * 1 * 1");
+        assertTrue(expr.isMultiply());
+        assertTrue(expr.getLeftHandSide() instanceof FactorExpression);
+        assertTrue(expr.getRightHandSide() instanceof IntegerLiteralExpression);
+    }
+
+
     private <T> T parseExpression(String source) {
+        return parseExpression(source, true);
+    }
+
+    private <T> T parseExpression(String source, boolean verify) {
         final CatScriptParser parser = new CatScriptParser();
-        final CatScriptProgram program = parser.parse(source);
-        program.verify();
+        final CatScriptProgram program = parser.parseAsExpression(source);
+        if(verify) {
+            program.verify();
+        }
         return (T) program.getExpression();
     }
 }
