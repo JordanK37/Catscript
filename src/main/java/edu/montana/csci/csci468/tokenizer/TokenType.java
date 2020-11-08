@@ -31,6 +31,7 @@ public enum TokenType {
         KEYWORDS.put("function", FUNCTION);
         KEYWORDS.put("for", FOR);
         KEYWORDS.put("if", IF);
+        KEYWORDS.put("not", NOT);
         KEYWORDS.put("null", NULL);
         KEYWORDS.put("print", PRINT);
         KEYWORDS.put("return", RETURN);

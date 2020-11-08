@@ -92,4 +92,20 @@ public abstract class ParseElement {
     public boolean hasError(String errorMessage) {
         return errors.stream().anyMatch(parseError -> Objects.equals(parseError.getMessage(), errorMessage));
     }
+
+    public void verify() {
+        final LinkedList<ParseError> collector = new LinkedList<>();
+        collectErrors(collector, this);
+        if (collector.size() > 0) {
+            throw new ParseErrorException(collector);
+        }
+    }
+
+    private void collectErrors(LinkedList<ParseError> collector, ParseElement parseElement){
+        collector.addAll(parseElement.getErrors());
+        for (ParseElement child : parseElement.getChildren()) {
+            collectErrors(collector, child);
+        }
+    }
+
 }

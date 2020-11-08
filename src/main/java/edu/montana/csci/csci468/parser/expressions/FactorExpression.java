@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.tokenizer.Token;
+import edu.montana.csci.csci468.tokenizer.TokenType;
 
 public class FactorExpression extends Expression {
 
@@ -20,6 +21,10 @@ public class FactorExpression extends Expression {
 
     public Expression getRightHandSide() {
         return rightHandSide;
+    }
+
+    public boolean isMultiply() {
+        return operator.getType() == TokenType.STAR;
     }
 
     @Override
