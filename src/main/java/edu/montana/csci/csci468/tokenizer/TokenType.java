@@ -8,7 +8,7 @@ public enum TokenType {
     LEFT_PAREN, RIGHT_PAREN,
     LEFT_BRACE, RIGHT_BRACE,
     LEFT_BRACKET, RIGHT_BRACKET,
-    COMMA, DOT, MINUS, PLUS, SLASH, STAR,
+    COLON, COMMA, DOT, MINUS, PLUS, SLASH, STAR,
     BANG_EQUAL,
     EQUAL, EQUAL_EQUAL,
     GREATER, GREATER_EQUAL,
@@ -18,7 +18,7 @@ public enum TokenType {
     IDENTIFIER, STRING, INTEGER,
 
     // keywords
-    ELSE, FALSE, FUNCTION, FOR, IF, NOT, NULL,
+    ELSE, FALSE, FUNCTION, FOR, IF, IN, NOT, NULL,
     PRINT, RETURN, TRUE, VAR,
 
     ERROR,
@@ -30,6 +30,7 @@ public enum TokenType {
         KEYWORDS.put("false", FALSE);
         KEYWORDS.put("function", FUNCTION);
         KEYWORDS.put("for", FOR);
+        KEYWORDS.put("in", IN);
         KEYWORDS.put("if", IF);
         KEYWORDS.put("not", NOT);
         KEYWORDS.put("null", NULL);

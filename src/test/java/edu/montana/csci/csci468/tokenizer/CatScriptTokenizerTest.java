@@ -56,18 +56,18 @@ public class CatScriptTokenizerTest {
 
     @Test
     public void basicKeywords(){
-        assertTokensAre("else false function for if not null print return true var",
-                ELSE, FALSE, FUNCTION, FOR, IF, NOT, NULL,
+        assertTokensAre("else false function for if in not null print return true var",
+                ELSE, FALSE, FUNCTION, FOR, IF, IN, NOT, NULL,
                 PRINT, RETURN, TRUE, VAR, EOF);
     }
 
     @Test
     public void basicSyntax(){
-        assertTokensAre("( ) { } [ ] , . - + / * != = == > >= < <=",
+        assertTokensAre("( ) { } [ ] : , . - + / * != = == > >= < <=",
                 LEFT_PAREN, RIGHT_PAREN,
                 LEFT_BRACE, RIGHT_BRACE,
                 LEFT_BRACKET, RIGHT_BRACKET,
-                COMMA, DOT, MINUS, PLUS, SLASH, STAR,
+                COMMA, COMMA, DOT, MINUS, PLUS, SLASH, STAR,
                 BANG_EQUAL,
                 EQUAL, EQUAL_EQUAL,
                 GREATER, GREATER_EQUAL,

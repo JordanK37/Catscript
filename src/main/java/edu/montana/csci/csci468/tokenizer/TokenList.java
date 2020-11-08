@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static edu.montana.csci.csci468.tokenizer.TokenType.EOF;
+import static edu.montana.csci.csci468.tokenizer.TokenType.IDENTIFIER;
 
 public class TokenList implements Iterable<Token> {
 
@@ -34,6 +35,15 @@ public class TokenList implements Iterable<Token> {
     public boolean matchAndConsume(TokenType... type) {
         if (match(type)) {
             consumeToken();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean match(String identifier) {
+        if (getCurrentToken().getType().equals(IDENTIFIER) &&
+            getCurrentToken().getStringValue().equals(identifier)) {
             return true;
         } else {
             return false;

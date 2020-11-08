@@ -17,7 +17,7 @@ statement = for_statement |
             print_statement |
             variable_statement |
             assignment_statement |
-            function_invocation;
+            function_call_statement;
 
 for_statement = 'for', '(', identifier, 'in', expression ')', '{', { statement }, '}';
 
@@ -26,6 +26,8 @@ if_statement = 'if', '(', expression, ')', '{', { statement }, '}' [ 'else', '{'
 print_statement = 'print', '(', expression, ')'
 
 variable_statement = 'var', identifier, [':', type_expression, ] '=', expression;
+
+function_call_statement = function_call;
 
 assignment_statement = identifier, '=', expression;
 
@@ -62,6 +64,8 @@ function_call = IDENTIFIER, '(', argument_list , ')'
 
 argument_list = [ expr , { ',' , expr } ]
 
+type_expression = 'int' | 'string' | 'bool' | 'object' | 'list', '<' , type_expression, '>'
+
 ```
 
 ### CatScript Types
@@ -73,4 +77,4 @@ CatScript is statically typed, with a small type system as follows
 * bool - a boolean value
 * list<x> - a list of value with the type 'x'
 * null - the null type 
-* any - any type of value
+* object - any type of value

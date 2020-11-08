@@ -6,6 +6,7 @@ public class ParseError {
 
     public static final String UNTERMINATED_LIST = "Unterminated list literal";
     public static final String UNTERMINATED_ARG_LIST = "Unterminated argument list";
+    public static final String BAD_TYPE_NAME = "Bad Type Name";
 
     private Token location;
     private String message;

@@ -10,13 +10,30 @@ public class ForStatement extends Statement {
     private String variableName;
     private List<Statement> body;
 
-    public ForStatement(String variableName, Expression parseExpression, List<Statement> statements) {
+    public void setExpression(Expression expression) {
+        this.expression = addChild(expression);
+    }
+
+    public void setVariableName(String variableName) {
         this.variableName = variableName;
-        this.expression = addChild(parseExpression);
+    }
+
+    public void setBody(List<Statement> statements) {
         this.body = new LinkedList<>();
         for (Statement statement : statements) {
             this.body.add(addChild(statement));
         }
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public List<Statement> getBody() {
+        return body;
+    }
 }

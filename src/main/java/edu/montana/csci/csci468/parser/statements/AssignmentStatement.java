@@ -6,9 +6,19 @@ public class AssignmentStatement extends Statement {
     private Expression expression;
     private String variableName;
 
-    public void setExpression(String variableName, Expression parseExpression) {
-        this.variableName = variableName;
-        this.expression = addChild(parseExpression);
+    public Expression getExpression() {
+        return expression;
     }
 
+    public void setExpression(Expression expression) {
+        this.expression = addChild(expression);
+    }
+
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(String variableName) {
+        this.variableName = variableName;
+    }
 }
