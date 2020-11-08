@@ -131,12 +131,49 @@ public class CatscriptParserStatementsTest {
     }
 
     @Test
-    public void functionStatement() {
+    public void functionCallStatement() {
         FunctionCallStatement expr = parseStatement("x(1, 2, 3) y = 1");
         assertNotNull(expr);
         assertEquals("x", expr.getName());
         assertEquals(3, expr.getArguments().size());
     }
+
+    @Test
+    public void functionDefStatement() {
+        FunctionDefinitionStatement expr = parseStatement("function x() {}");
+        assertNotNull(expr);
+        assertEquals("x", expr.getName());
+        assertEquals(0, expr.getParameterCount());
+    }
+
+    @Test
+    public void functionDefWithParamsStatement() {
+        FunctionDefinitionStatement expr = parseStatement("function x(a, b, c) {}");
+        assertNotNull(expr);
+        assertEquals("x", expr.getName());
+        assertEquals(3, expr.getParameterCount());
+        assertEquals("a", expr.getParameterName(0));
+        assertEquals("b", expr.getParameterName(1));
+        assertEquals("c", expr.getParameterName(2));
+        assertEquals(CatscriptType.OBJECT, expr.getParameterType(0));
+        assertEquals(CatscriptType.OBJECT, expr.getParameterType(1));
+        assertEquals(CatscriptType.OBJECT, expr.getParameterType(2));
+    }
+
+    @Test
+    public void functionDefWithParamTypesStatement() {
+        FunctionDefinitionStatement expr = parseStatement("function x(a : object, b : int, c : bool) {}");
+        assertNotNull(expr);
+        assertEquals("x", expr.getName());
+        assertEquals(3, expr.getParameterCount());
+        assertEquals("a", expr.getParameterName(0));
+        assertEquals("b", expr.getParameterName(1));
+        assertEquals("c", expr.getParameterName(2));
+        assertEquals(CatscriptType.OBJECT, expr.getParameterType(0));
+        assertEquals(CatscriptType.INT, expr.getParameterType(1));
+        assertEquals(CatscriptType.BOOLEAN, expr.getParameterType(2));
+    }
+
 
     private <T> T parseStatement(String source) {
         return parseStatement(source, true);

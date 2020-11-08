@@ -10,6 +10,7 @@ public class CatscriptType {
     public static final CatscriptType BOOLEAN = new CatscriptType("bool", Boolean.class);
     public static final CatscriptType OBJECT = new CatscriptType("object", Object.class);
     public static final CatscriptType NULL = new CatscriptType("null", Object.class);
+    public static final CatscriptType VOID = new CatscriptType("void", Object.class);
 
     private final String name;
     private final Class javaClass;
@@ -20,7 +21,9 @@ public class CatscriptType {
     }
 
     public boolean isAssignableFrom(CatscriptType type) {
-        if (type == NULL) {
+        if (type == VOID) {
+            return false;
+        } else if (type == NULL) {
             return true;
         } else if (this.javaClass.isAssignableFrom(type.javaClass)) {
             return true;
