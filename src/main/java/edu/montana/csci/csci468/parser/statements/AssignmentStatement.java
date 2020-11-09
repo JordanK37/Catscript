@@ -1,5 +1,7 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
@@ -33,5 +35,23 @@ public class AssignmentStatement extends Statement {
         } else {
             // TOOD - verify compatilibity of types
         }
+    }
+
+    //==============================================================
+    // Implementation
+    //==============================================================
+    @Override
+    public void execute(CatscriptRuntime runtime) {
+        super.execute(runtime);
+    }
+
+    @Override
+    public void transpile(StringBuilder javascript) {
+        super.transpile(javascript);
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        super.compile(code);
     }
 }

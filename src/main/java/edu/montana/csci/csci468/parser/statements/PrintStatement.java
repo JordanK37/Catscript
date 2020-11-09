@@ -1,5 +1,7 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 
@@ -10,10 +12,6 @@ public class PrintStatement extends Statement {
         this.expression = addChild(parseExpression);
     }
 
-    @Override
-    public void execute() {
-        getProgram().print(expression.evaluate());
-    }
 
     public Expression getExpression() {
         return expression;
@@ -22,6 +20,24 @@ public class PrintStatement extends Statement {
     @Override
     public void validate(SymbolTable symbolTable) {
         expression.validate(symbolTable);
+    }
+
+    //==============================================================
+    // Implementation
+    //==============================================================
+    @Override
+    public void execute(CatscriptRuntime runtime) {
+        getProgram().print(expression.evaluate());
+    }
+
+    @Override
+    public void transpile(StringBuilder javascript) {
+        super.transpile(javascript);
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        super.compile(code);
     }
 
 }

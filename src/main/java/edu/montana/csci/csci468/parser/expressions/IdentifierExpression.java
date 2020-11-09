@@ -1,9 +1,10 @@
 package edu.montana.csci.csci468.parser.expressions;
 
+import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
-import edu.montana.csci.csci468.parser.statements.VariableStatement;
 
 public class IdentifierExpression extends Expression {
     private final String name;
@@ -31,4 +32,25 @@ public class IdentifierExpression extends Expression {
             this.type = type;
         }
     }
+
+    //==============================================================
+    // Implementation
+    //==============================================================
+
+    @Override
+    public Object evaluate(CatscriptRuntime runtime) {
+        return super.evaluate(runtime);
+    }
+
+    @Override
+    public void transpile(StringBuilder javascript) {
+        super.transpile(javascript);
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        super.compile(code);
+    }
+
+
 }

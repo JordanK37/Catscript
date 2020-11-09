@@ -128,7 +128,7 @@ public class ByteCodeGenerator {
         executeMethod.addLabel(label);
     }
 
-    public void loadConstantValue(Object value) {
+    public void pushConstantOntoStack(Object value) {
         executeMethod.loadConstantValue(value);
     }
 

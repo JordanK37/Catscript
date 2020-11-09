@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
@@ -31,35 +32,6 @@ public class AdditiveExpression extends Expression {
     }
 
     @Override
-    public Object evaluate() {
-        Integer lhsValue = (Integer) leftHandSide.evaluate();
-        Integer rhsValue = (Integer) rightHandSide.evaluate();
-        if (isAdd()) {
-            return lhsValue + rhsValue;
-        } else {
-            return lhsValue - rhsValue;
-        }
-    }
-
-    @Override
-    public void transpile(StringBuilder javascript) {
-        getLeftHandSide().transpile(javascript);
-        javascript.append(isAdd() ? " + " : " - ");
-        getRightHandSide().transpile(javascript);
-    }
-
-    @Override
-    public void compile(ByteCodeGenerator code) {
-        getLeftHandSide().compile(code);
-        getRightHandSide().compile(code);
-        if (isAdd()) {
-            code.addInstruction(Opcodes.IADD);
-        } else {
-            code.addInstruction(Opcodes.ISUB);
-        }
-    }
-
-    @Override
     public void validate(SymbolTable symbolTable) {
         leftHandSide.validate(symbolTable);
         rightHandSide.validate(symbolTable);
@@ -86,4 +58,39 @@ public class AdditiveExpression extends Expression {
     public String toString() {
         return super.toString() + "[" + operator.getStringValue() + "]";
     }
+
+    //==============================================================
+    // Implementation
+    //==============================================================
+
+    @Override
+    public Object evaluate(CatscriptRuntime runtime) {
+        Integer lhsValue = (Integer) leftHandSide.evaluate();
+        Integer rhsValue = (Integer) rightHandSide.evaluate();
+        //TODO handle string case
+        if (isAdd()) {
+            return lhsValue + rhsValue;
+        } else {
+            return lhsValue - rhsValue;
+        }
+    }
+
+    @Override
+    public void transpile(StringBuilder javascript) {
+        getLeftHandSide().transpile(javascript);
+        javascript.append(isAdd() ? " + " : " - ");
+        getRightHandSide().transpile(javascript);
+    }
+
+    @Override
+    public void compile(ByteCodeGenerator code) {
+        getLeftHandSide().compile(code);
+        getRightHandSide().compile(code);
+        if (isAdd()) {
+            code.addInstruction(Opcodes.IADD);
+        } else {
+            code.addInstruction(Opcodes.ISUB);
+        }
+    }
+
 }

@@ -1,11 +1,17 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ParseElement;
 
 public abstract class Expression extends ParseElement {
-    public Object evaluate() {
+
+    public final Object evaluate() {
+        return evaluate(new CatscriptRuntime());
+    }
+
+    public Object evaluate(CatscriptRuntime runtime) {
         throw new UnsupportedOperationException("evaluate needs to be implemented for " + this.getClass().getName());
     }
 

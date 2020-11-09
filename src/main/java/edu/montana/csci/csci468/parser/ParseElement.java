@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
 import edu.montana.csci.csci468.parser.statements.FunctionDefinitionStatement;
 import edu.montana.csci.csci468.tokenizer.Token;
@@ -86,10 +87,6 @@ public abstract class ParseElement {
         return this.getClass().getSimpleName();
     }
 
-    public abstract void transpile(StringBuilder javascript);
-
-    public abstract void compile(ByteCodeGenerator code);
-
     public boolean hasError(String errorMessage) {
         return errors.stream().anyMatch(parseError -> Objects.equals(parseError.getMessage(), errorMessage));
     }
@@ -127,6 +124,14 @@ public abstract class ParseElement {
         for (ParseElement child : parseElement.getChildren()) {
             collectErrors(collector, child);
         }
+    }
+
+    public void transpile(StringBuilder javascript) {
+        throw new UnsupportedOperationException("transpile needs to be implemented for " + this.getClass().getName());
+    }
+
+    public void compile(ByteCodeGenerator code) {
+        throw new UnsupportedOperationException("compile needs to be implemented for " + this.getClass().getName());
     }
 
 }

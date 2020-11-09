@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser.statements;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import org.objectweb.asm.Opcodes;
@@ -45,23 +46,26 @@ public class CatScriptProgram extends Statement {
     }
 
     @Override
-    public void execute() {
-        if (expression != null) {
-            print(expression.evaluate());
-        } else {
-            for (Statement statement : statements) {
-                statement.execute();
-            }
-        }
-    }
-
-    @Override
     public void validate(SymbolTable symbolTable) {
         if (expression != null) {
             expression.validate(symbolTable);
         } else {
             for (Statement statement : statements) {
                 statement.validate(symbolTable);
+            }
+        }
+    }
+
+    //==============================================================
+    // Implementation
+    //==============================================================
+    @Override
+    public void execute(CatscriptRuntime runtime) {
+        if (expression != null) {
+            print(expression.evaluate());
+        } else {
+            for (Statement statement : statements) {
+                statement.execute(runtime);
             }
         }
     }
@@ -95,5 +99,6 @@ public class CatScriptProgram extends Statement {
             }
         }
     }
+
 
 }
