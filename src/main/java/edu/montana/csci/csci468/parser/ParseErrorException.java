@@ -17,4 +17,8 @@ public class ParseErrorException extends RuntimeException {
         }
         return errorMessage.toString();
     }
+
+    public List<ParseError> getErrors() {
+        return errors;
+    }
 }

@@ -1,6 +1,8 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.SymbolTable;
 
 public class IntegerLiteralExpression extends Expression {
     private final int integerVal;
@@ -31,5 +33,13 @@ public class IntegerLiteralExpression extends Expression {
     @Override
     public void compile(ByteCodeGenerator code) {
         code.loadConstantValue(integerVal);
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {}
+
+    @Override
+    public CatscriptType getType() {
+        return CatscriptType.INT;
     }
 }

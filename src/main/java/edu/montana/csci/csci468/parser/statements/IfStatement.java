@@ -1,5 +1,8 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 
 import java.util.Collections;
@@ -39,5 +42,22 @@ public class IfStatement extends Statement {
         for (Statement statement : statements) {
             this.elseStatements.add(addChild(statement));
         }
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        if (!expression.getType().equals(CatscriptType.BOOLEAN)) {
+            expression.addError(ParseError.INCOMPATIBLE_TYPES);
+        }
+        symbolTable.pushScope();
+        for (Statement trueStatement : trueStatements) {
+            trueStatement.validate(symbolTable);
+        }
+        symbolTable.popScope();
+        symbolTable.pushScope();
+        for (Statement elseStatement : elseStatements) {
+            elseStatement.validate(symbolTable);
+        }
+        symbolTable.popScope();
     }
 }

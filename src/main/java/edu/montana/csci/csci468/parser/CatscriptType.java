@@ -53,7 +53,7 @@ public class CatscriptType {
         return Objects.hash(name);
     }
 
-    static class ListType extends CatscriptType {
+    public static class ListType extends CatscriptType {
         private final CatscriptType componentType;
         public ListType(CatscriptType componentType) {
             super("list", List.class);
@@ -68,6 +68,10 @@ public class CatscriptType {
                 return this.componentType.isAssignableFrom(((ListType) type).componentType);
             }
             return false;
+        }
+
+        public CatscriptType getComponentType() {
+            return componentType;
         }
 
         @Override

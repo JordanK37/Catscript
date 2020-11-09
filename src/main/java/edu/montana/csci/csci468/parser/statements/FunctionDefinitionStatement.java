@@ -1,6 +1,8 @@
 package edu.montana.csci.csci468.parser.statements;
 
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import edu.montana.csci.csci468.parser.expressions.FunctionCallExpression;
 
@@ -13,7 +15,7 @@ public class FunctionDefinitionStatement extends Statement {
     private CatscriptType type;
     private List<CatscriptType> argumentTypes = new ArrayList<>();
     private List<String> argumentNames = new ArrayList<>();
-    private LinkedList<Object> body;
+    private LinkedList<Statement> body;
 
     public void setName(String name) {
         this.name = name;
@@ -55,7 +57,23 @@ public class FunctionDefinitionStatement extends Statement {
         }
     }
 
-    public List<Object> getBody() {
+    public List<Statement> getBody() {
         return body;
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        symbolTable.pushScope();
+        for (int i = 0; i < getParameterCount(); i++) {
+            if (symbolTable.hasSymbol(getParameterName(i))) {
+                addError(ParseError.DUPLICATE_NAME);
+            } else {
+                symbolTable.registerSymbol(getParameterName(i), getParameterType(i));
+            }
+        }
+        for (Statement statement : body) {
+            statement.validate(symbolTable);
+        }
+        symbolTable.popScope();
     }
 }

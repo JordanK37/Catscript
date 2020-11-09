@@ -1,11 +1,12 @@
 package edu.montana.csci.csci468.parser;
 
+import edu.montana.csci.csci468.CatscriptTestBase;
 import edu.montana.csci.csci468.parser.expressions.*;
 import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CatscriptParserExpressionsTest {
+public class CatscriptParserExpressionsTest extends CatscriptTestBase {
 
     @Test
     public void parseIntegerLiteralWorks() {
@@ -67,7 +68,7 @@ public class CatscriptParserExpressionsTest {
 
     @Test
     public void parseIdentifierExpression() {
-        IdentifierExpression expr = parseExpression("x");
+        IdentifierExpression expr = parseExpression("x", false);
         assertEquals("x", expr.getName());
     }
 
@@ -92,14 +93,14 @@ public class CatscriptParserExpressionsTest {
 
     @Test
     public void parseFunctionCallExpression() {
-        FunctionCallExpression expr = parseExpression("foo(1, 2, 3)");
+        FunctionCallExpression expr = parseExpression("foo(1, 2, 3)", false);
         assertEquals("foo", expr.getName());
         assertEquals(3, expr.getArguments().size());
     }
 
     @Test
     public void parseNoArgFunctionCallExpression() {
-        FunctionCallExpression expr = parseExpression("foo()");
+        FunctionCallExpression expr = parseExpression("foo()", false);
         assertEquals("foo", expr.getName());
         assertEquals(0, expr.getArguments().size());
     }
@@ -197,17 +198,4 @@ public class CatscriptParserExpressionsTest {
         assertFalse(expr.isEqual());
     }
 
-
-    private <T> T parseExpression(String source) {
-        return parseExpression(source, true);
-    }
-
-    private <T> T parseExpression(String source, boolean verify) {
-        final CatScriptParser parser = new CatScriptParser();
-        final CatScriptProgram program = parser.parseAsExpression(source);
-        if(verify) {
-            program.verify();
-        }
-        return (T) program.getExpression();
-    }
 }

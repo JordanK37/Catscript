@@ -1,5 +1,8 @@
 package edu.montana.csci.csci468.parser.expressions;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 
 import static edu.montana.csci.csci468.tokenizer.TokenType.*;
@@ -40,5 +43,22 @@ public class ComparisonExpression extends Expression {
     }
     public boolean isGreater() {
         return operator.getType().equals(GREATER);
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        leftHandSide.validate(symbolTable);
+        rightHandSide.validate(symbolTable);
+        if (!leftHandSide.getType().equals(CatscriptType.INT)) {
+            leftHandSide.addError(ParseError.INCOMPATIBLE_TYPES);
+        }
+        if (!rightHandSide.getType().equals(CatscriptType.INT)) {
+            rightHandSide.addError(ParseError.INCOMPATIBLE_TYPES);
+        }
+    }
+
+    @Override
+    public CatscriptType getType() {
+        return CatscriptType.BOOLEAN;
     }
 }

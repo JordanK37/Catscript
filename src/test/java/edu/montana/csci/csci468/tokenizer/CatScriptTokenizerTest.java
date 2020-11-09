@@ -1,15 +1,14 @@
 package edu.montana.csci.csci468.tokenizer;
 
+import edu.montana.csci.csci468.CatscriptTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static edu.montana.csci.csci468.tokenizer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CatScriptTokenizerTest {
+public class CatScriptTokenizerTest extends CatscriptTestBase {
 
     @Test
     public void basicTokenizerTest(){
@@ -67,7 +66,7 @@ public class CatScriptTokenizerTest {
                 LEFT_PAREN, RIGHT_PAREN,
                 LEFT_BRACE, RIGHT_BRACE,
                 LEFT_BRACKET, RIGHT_BRACKET,
-                COMMA, COMMA, DOT, MINUS, PLUS, SLASH, STAR,
+                COLON, COMMA, DOT, MINUS, PLUS, SLASH, STAR,
                 BANG_EQUAL,
                 EQUAL, EQUAL_EQUAL,
                 GREATER, GREATER_EQUAL,
@@ -135,28 +134,5 @@ public class CatScriptTokenizerTest {
                 VAR, IDENTIFIER, EQUAL, INTEGER, EOF);
     }
 
-    //=================================================================
-    //  Helpers
-    //=================================================================
-
-    private void assertTokensAre(String src, TokenType... expected) {
-        TokenList tokens = getTokenList(src);
-        assertEquals(Arrays.asList(expected), tokens.stream().map(Token::getType).collect(Collectors.toList()));
-    }
-
-    private TokenList getTokenList(String src) {
-        CatScriptTokenizer tokenizer = new CatScriptTokenizer(src);
-        return tokenizer.getTokens();
-    }
-
-    private List<Token> getTokensAsList(String src) {
-        CatScriptTokenizer tokenizer = new CatScriptTokenizer(src);
-        return tokenizer.getTokens().stream().collect(Collectors.toList());
-    }
-
-    private void assertTokensAre(String src, String... expected) {
-        TokenList tokens = getTokenList(src);
-        assertEquals(Arrays.asList(expected), tokens.stream().map(Token::getStringValue).collect(Collectors.toList()));
-    }
 
 }

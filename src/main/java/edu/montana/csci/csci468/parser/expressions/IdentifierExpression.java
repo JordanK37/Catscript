@@ -1,7 +1,13 @@
 package edu.montana.csci.csci468.parser.expressions;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
+import edu.montana.csci.csci468.parser.statements.VariableStatement;
+
 public class IdentifierExpression extends Expression {
     private final String name;
+    private CatscriptType type;
 
     public IdentifierExpression(String value) {
         this.name = value;
@@ -9,5 +15,20 @@ public class IdentifierExpression extends Expression {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public CatscriptType getType() {
+        return type;
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        CatscriptType type = symbolTable.getSymbolType(getName());
+        if (type == null) {
+            addError(ParseError.UNKNOWN_NAME);
+        } else {
+            this.type = type;
+        }
     }
 }

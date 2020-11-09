@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468.parser.statements;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import org.objectweb.asm.Opcodes;
 
@@ -50,6 +51,17 @@ public class CatScriptProgram extends Statement {
         } else {
             for (Statement statement : statements) {
                 statement.execute();
+            }
+        }
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        if (expression != null) {
+            expression.validate(symbolTable);
+        } else {
+            for (Statement statement : statements) {
+                statement.validate(symbolTable);
             }
         }
     }

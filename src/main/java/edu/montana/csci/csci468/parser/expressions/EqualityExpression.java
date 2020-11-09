@@ -1,5 +1,7 @@
 package edu.montana.csci.csci468.parser.expressions;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 
@@ -30,5 +32,16 @@ public class EqualityExpression extends Expression {
 
     public boolean isEqual() {
         return operator.getType().equals(TokenType.EQUAL_EQUAL);
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        leftHandSide.validate(symbolTable);
+        rightHandSide.validate(symbolTable);
+    }
+
+    @Override
+    public CatscriptType getType() {
+        return CatscriptType.BOOLEAN;
     }
 }

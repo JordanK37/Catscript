@@ -1,5 +1,6 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 
 public class SyntaxErrorStatement extends Statement {
@@ -8,6 +9,9 @@ public class SyntaxErrorStatement extends Statement {
         setToken(start);
         addError("Bad token : " + getStart());
     }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {}
 
     @Override
     public void execute() {

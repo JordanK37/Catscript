@@ -2,6 +2,7 @@ package edu.montana.csci.csci468.parser;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
+import edu.montana.csci.csci468.parser.statements.FunctionDefinitionStatement;
 import edu.montana.csci.csci468.tokenizer.Token;
 
 import java.util.LinkedList;
@@ -93,13 +94,33 @@ public abstract class ParseElement {
         return errors.stream().anyMatch(parseError -> Objects.equals(parseError.getMessage(), errorMessage));
     }
 
+    private void registerFunctions(SymbolTable symbolTable) {
+        for (ParseElement child : children) {
+            if (child instanceof FunctionDefinitionStatement) {
+                FunctionDefinitionStatement func = (FunctionDefinitionStatement) child;
+                if (symbolTable.hasSymbol(func.getName())) {
+                    func.addError(ParseError.DUPLICATE_NAME);
+                } else {
+                    symbolTable.registerFunction(func.getName(), func);
+                }
+            }
+        }
+    }
+
+
     public void verify() {
+        SymbolTable symbolTable = new SymbolTable();
+        registerFunctions(symbolTable);
+        validate(symbolTable);
+
         final LinkedList<ParseError> collector = new LinkedList<>();
         collectErrors(collector, this);
         if (collector.size() > 0) {
             throw new ParseErrorException(collector);
         }
     }
+
+    public abstract void validate(SymbolTable symbolTable);
 
     private void collectErrors(LinkedList<ParseError> collector, ParseElement parseElement){
         collector.addAll(parseElement.getErrors());

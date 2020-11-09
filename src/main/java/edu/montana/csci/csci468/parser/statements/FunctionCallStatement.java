@@ -1,5 +1,6 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import edu.montana.csci.csci468.parser.expressions.FunctionCallExpression;
 
@@ -13,6 +14,11 @@ public class FunctionCallStatement extends Statement {
 
     public List<Expression> getArguments() {
         return expression.getArguments();
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        expression.validate(symbolTable);
     }
 
     public String getName() {

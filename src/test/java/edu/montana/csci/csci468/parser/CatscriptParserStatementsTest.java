@@ -1,12 +1,13 @@
 package edu.montana.csci.csci468.parser;
 
+import edu.montana.csci.csci468.CatscriptTestBase;
 import edu.montana.csci.csci468.parser.expressions.*;
 import edu.montana.csci.csci468.parser.statements.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CatscriptParserStatementsTest {
+public class CatscriptParserStatementsTest extends CatscriptTestBase {
 
     @Test
     public void printStatement() {
@@ -39,7 +40,7 @@ public class CatscriptParserStatementsTest {
 
     @Test
     public void ifStatementParses() {
-        IfStatement expr = parseStatement("if(x > 10){ print(x) }");
+        IfStatement expr = parseStatement("if(x > 10){ print(x) }", false);
         assertNotNull(expr);
         assertTrue(expr.getExpression() instanceof ComparisonExpression);
         assertEquals(1, expr.getTrueStatements().size());
@@ -55,7 +56,7 @@ public class CatscriptParserStatementsTest {
 
     @Test
     public void ifStatementWithElseParses() {
-        IfStatement expr = parseStatement("if(x > 10){ print(x) } else { print( 10 ) }");
+        IfStatement expr = parseStatement("if(x > 10){ print(x) } else { print( 10 ) }", false);
         assertNotNull(expr);
         assertTrue(expr.getExpression() instanceof ComparisonExpression);
         assertEquals(1, expr.getTrueStatements().size());
@@ -124,7 +125,7 @@ public class CatscriptParserStatementsTest {
 
     @Test
     public void assigmentStatement() {
-        AssignmentStatement expr = parseStatement("x = null");
+        AssignmentStatement expr = parseStatement("x = null", false);
         assertNotNull(expr);
         assertEquals("x", expr.getVariableName());
         assertTrue(expr.getExpression() instanceof NullLiteralExpression);
@@ -132,7 +133,7 @@ public class CatscriptParserStatementsTest {
 
     @Test
     public void functionCallStatement() {
-        FunctionCallStatement expr = parseStatement("x(1, 2, 3) y = 1");
+        FunctionCallStatement expr = parseStatement("x(1, 2, 3) y = 1", false);
         assertNotNull(expr);
         assertEquals("x", expr.getName());
         assertEquals(3, expr.getArguments().size());
@@ -193,16 +194,4 @@ public class CatscriptParserStatementsTest {
         assertTrue(returnStmt.getExpression() instanceof IntegerLiteralExpression);
     }
 
-    private <T> T parseStatement(String source) {
-        return parseStatement(source, true);
-    }
-
-    private <T> T parseStatement(String source, boolean verify) {
-        final CatScriptParser parser = new CatScriptParser();
-        final CatScriptProgram program = parser.parse(source);
-        if(verify) {
-            program.verify();
-        }
-        return (T) program.getStatements().get(0);
-    }
 }

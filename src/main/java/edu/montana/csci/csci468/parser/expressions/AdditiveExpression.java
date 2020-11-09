@@ -1,6 +1,9 @@
 package edu.montana.csci.csci468.parser.expressions;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 import org.objectweb.asm.Opcodes;
@@ -53,6 +56,29 @@ public class AdditiveExpression extends Expression {
             code.addInstruction(Opcodes.IADD);
         } else {
             code.addInstruction(Opcodes.ISUB);
+        }
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        leftHandSide.validate(symbolTable);
+        rightHandSide.validate(symbolTable);
+        if (getType().equals(CatscriptType.INT)) {
+            if (!leftHandSide.getType().equals(CatscriptType.INT)) {
+                leftHandSide.addError(ParseError.INCOMPATIBLE_TYPES);
+            }
+            if (!rightHandSide.getType().equals(CatscriptType.INT)) {
+                rightHandSide.addError(ParseError.INCOMPATIBLE_TYPES);
+            }
+        }
+    }
+
+    @Override
+    public CatscriptType getType() {
+        if (leftHandSide.getType().equals(CatscriptType.STRING) || rightHandSide.getType().equals(CatscriptType.STRING)) {
+            return CatscriptType.STRING;
+        } else {
+            return CatscriptType.INT;
         }
     }
 

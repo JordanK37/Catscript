@@ -1,13 +1,15 @@
 package edu.montana.csci.csci468.parser.statements;
 
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
-import edu.montana.csci.csci468.parser.expressions.TypeLiteral;
 
 public class VariableStatement extends Statement {
     private Expression expression;
     private String variableName;
     private CatscriptType explicitType;
+    private CatscriptType type;
 
     public Expression getExpression() {
         return expression;
@@ -31,5 +33,25 @@ public class VariableStatement extends Statement {
 
     public CatscriptType getExplicitType() {
         return explicitType;
+    }
+
+    public boolean isGlobal() {
+        return getParent() instanceof CatScriptProgram;
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        expression.validate(symbolTable);
+        if (symbolTable.hasSymbol(variableName)) {
+            addError(ParseError.DUPLICATE_NAME);
+        } else {
+            // TODO if there is an explicit type, ensure it is correct
+            //      if not, infer the type from the right hand side expression
+            symbolTable.registerSymbol(variableName, type);
+        }
+    }
+
+    public CatscriptType getType() {
+        return type;
     }
 }

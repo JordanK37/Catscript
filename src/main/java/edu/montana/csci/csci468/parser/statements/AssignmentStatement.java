@@ -1,5 +1,8 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 
 public class AssignmentStatement extends Statement {
@@ -20,5 +23,15 @@ public class AssignmentStatement extends Statement {
 
     public void setVariableName(String variableName) {
         this.variableName = variableName;
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        CatscriptType symbolType = symbolTable.getSymbolType(getVariableName());
+        if (symbolType == null) {
+            addError(ParseError.UNKNOWN_NAME);
+        } else {
+            // TOOD - verify compatilibity of types
+        }
     }
 }

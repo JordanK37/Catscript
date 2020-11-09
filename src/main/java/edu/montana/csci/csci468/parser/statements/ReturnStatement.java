@@ -1,5 +1,8 @@
 package edu.montana.csci.csci468.parser.statements;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 
 public class ReturnStatement extends Statement {
@@ -15,7 +18,20 @@ public class ReturnStatement extends Statement {
     }
 
     public Expression getExpression() {
-    public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        if (expression != null) {
+            expression.validate(symbolTable);
+            if (!function.getType().isAssignableFrom(expression.getType())) {
+                expression.addError(ParseError.INCOMPATIBLE_TYPES);
+            }
+        } else {
+            if (!function.getType().equals(CatscriptType.VOID)) {
+                addError(ParseError.INCOMPATIBLE_TYPES);
+            }
+        }
     }
 }

@@ -1,11 +1,18 @@
 package edu.montana.csci.csci468.parser.expressions;
 
+import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.SymbolTable;
+import edu.montana.csci.csci468.parser.statements.FunctionDefinitionStatement;
+import edu.montana.csci.csci468.parser.statements.VariableStatement;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class FunctionCallExpression extends Expression {
     private final String name;
     List<Expression> arguments;
+    private CatscriptType type;
 
     public FunctionCallExpression(String functionName, List<Expression> arguments) {
         this.arguments = new LinkedList<>();
@@ -22,4 +29,33 @@ public class FunctionCallExpression extends Expression {
     public String getName() {
         return name;
     }
+
+    @Override
+    public CatscriptType getType() {
+        return type;
+    }
+
+    @Override
+    public void validate(SymbolTable symbolTable) {
+        FunctionDefinitionStatement function = symbolTable.getFunction(getName());
+        if (function == null) {
+            addError(ParseError.UNKNOWN_NAME);
+            type = CatscriptType.OBJECT;
+        } else {
+            type = function.getType();
+            if (arguments.size() != function.getParameterCount()) {
+                addError(ParseError.ARG_MISMATCH);
+            } else {
+                for (int i = 0; i < arguments.size(); i++) {
+                    Expression argument = arguments.get(i);
+                    argument.validate(symbolTable);
+                    CatscriptType parameterType = function.getParameterType(i);
+                    if (!parameterType.isAssignableFrom(argument.getType())) {
+                        argument.addError(ParseError.INCOMPATIBLE_TYPES);
+                    }
+                }
+            }
+        }
+    }
+
 }
