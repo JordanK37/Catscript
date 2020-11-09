@@ -25,6 +25,9 @@ public class ListLiteralExpression extends Expression {
 
     @Override
     public void validate(SymbolTable symbolTable) {
+        for (Expression value : values) {
+            value.validate(symbolTable);
+        }
         if (values.size() > 0) {
             // TODO - generalize this looking at all objects in list
             type = CatscriptType.getListType(values.get(0).getType());

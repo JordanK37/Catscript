@@ -37,6 +37,7 @@ public class UnaryExpression extends Expression {
 
     @Override
     public void validate(SymbolTable symbolTable) {
+        rightHandSide.validate(symbolTable);
         if (isNot() && !rightHandSide.getType().equals(CatscriptType.BOOLEAN)) {
             addError(ParseError.INCOMPATIBLE_TYPES);
         } else if(isMinus() && !rightHandSide.getType().equals(CatscriptType.INT)) {
