@@ -4,10 +4,7 @@ import edu.montana.csci.csci468.parser.expressions.AdditiveExpression;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import edu.montana.csci.csci468.parser.expressions.IntegerLiteralExpression;
 import edu.montana.csci.csci468.parser.expressions.SyntaxErrorExpression;
-import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
-import edu.montana.csci.csci468.parser.statements.PrintStatement;
-import edu.montana.csci.csci468.parser.statements.Statement;
-import edu.montana.csci.csci468.parser.statements.SyntaxErrorStatement;
+import edu.montana.csci.csci468.parser.statements.*;
 import edu.montana.csci.csci468.tokenizer.CatScriptTokenizer;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenList;
@@ -17,7 +14,8 @@ import static edu.montana.csci.csci468.tokenizer.TokenType.*;
 
 public class CatScriptParser {
 
-    TokenList tokens;
+    private TokenList tokens;
+    private FunctionDefinitionStatement currentFunctionDefinition;
 
     public CatScriptProgram parse(String source) {
         tokens = new CatScriptTokenizer(source).getTokens();

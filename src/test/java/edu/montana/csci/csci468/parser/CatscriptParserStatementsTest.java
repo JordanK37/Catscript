@@ -174,6 +174,24 @@ public class CatscriptParserStatementsTest {
         assertEquals(CatscriptType.BOOLEAN, expr.getParameterType(2));
     }
 
+    @Test
+    public void returnStatementNoExprInFunction() {
+        FunctionDefinitionStatement expr = parseStatement("function x() {return}");
+        assertNotNull(expr);
+        assertEquals("x", expr.getName());
+        ReturnStatement returnStmt = (ReturnStatement) expr.getBody().get(0);
+        assertNotNull(returnStmt);
+    }
+
+    @Test
+    public void returnStatementExprInFunction() {
+        FunctionDefinitionStatement expr = parseStatement("function x() : int {return 10}");
+        assertNotNull(expr);
+        assertEquals("x", expr.getName());
+        ReturnStatement returnStmt = (ReturnStatement) expr.getBody().get(0);
+        assertNotNull(returnStmt);
+        assertTrue(returnStmt.getExpression() instanceof IntegerLiteralExpression);
+    }
 
     private <T> T parseStatement(String source) {
         return parseStatement(source, true);

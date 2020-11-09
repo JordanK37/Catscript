@@ -39,9 +39,9 @@ function_body_statement = statement |
 
 parameter_list = [ parameter, {',' parameter } ];
 
-parameter = identifier, [ ':', type_expression ];
+parameter = identifier [ , ':', type_expression ];
 
-return_statement = 'return', expression;
+return_statement = 'return' [, expression];
 
 expression = equality_expression;
 

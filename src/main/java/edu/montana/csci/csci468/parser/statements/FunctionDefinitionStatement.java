@@ -54,4 +54,8 @@ public class FunctionDefinitionStatement extends Statement {
             this.body.add(addChild(statement));
         }
     }
+
+    public List<Object> getBody() {
+        return body;
+    }
 }
