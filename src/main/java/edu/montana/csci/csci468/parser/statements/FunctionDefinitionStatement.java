@@ -25,17 +25,27 @@ public class FunctionDefinitionStatement extends Statement {
         return type;
     }
 
-    public void setType(CatscriptType type) {
-        this.type = type;
+    public void setType(TypeLiteral typeLiteral) {
+        if (typeLiteral == null) {
+            type = CatscriptType.VOID;
+        } else {
+            addChild(typeLiteral);
+            type = typeLiteral.getType();
+        }
     }
 
     public String getName() {
         return name;
     }
 
-    public void addParameter(String name, CatscriptType type) {
+    public void addParameter(String name, TypeLiteral typeLiteral) {
         argumentNames.add(name);
-        argumentTypes.add(type);
+        if (typeLiteral == null) {
+            argumentTypes.add(CatscriptType.OBJECT);
+        } else {
+            addChild(typeLiteral);
+            argumentTypes.add(typeLiteral.getType());
+        }
     }
 
     public String getParameterName(int i) {
