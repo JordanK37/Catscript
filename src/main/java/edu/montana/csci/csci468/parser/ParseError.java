@@ -11,6 +11,7 @@ public class ParseError {
     public static final String INCOMPATIBLE_TYPES = "Incompatible types";
     public static final String UNKNOWN_NAME = "This name does not exit in this program";
     public static final String ARG_MISMATCH = "Wrong number of arguments";
+    public static final String MISSING_RETURN_STATEMENT = "Missing return statement in function";
 
     private Token location;
     private String message;

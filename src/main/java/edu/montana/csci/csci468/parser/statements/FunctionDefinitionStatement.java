@@ -85,6 +85,14 @@ public class FunctionDefinitionStatement extends Statement {
             statement.validate(symbolTable);
         }
         symbolTable.popScope();
+        if (!validateReturnCoverage(body)) {
+            addError(ParseError.MISSING_RETURN_STATEMENT);
+        }
+    }
+
+    private boolean validateReturnCoverage(List<Statement> statements) {
+        // TODO - implement return coverage checking
+        return true;
     }
 
     public Object invoke(CatscriptRuntime runtime, List<Object> args) {

@@ -102,6 +102,12 @@ public class CatscriptFunctionArgsAndReturnCompileTest extends CatscriptTestBase
                 "print(foo())"));
     }
 
+    @Test
+    void returnListWithComponentTypeWorksProperlyWithMultipleReturnOptions() {
+        assertEquals("[1, 2, 3]\n", compile("function foo() : list<int> { if(true){ return [1, 2, 3] } else { return null } }" +
+                "print(foo())"));
+    }
+
 
 
 }
