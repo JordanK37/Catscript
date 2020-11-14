@@ -7,40 +7,38 @@ import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ByteCodeGenerator {
 
-    private ClassWriter classWriter;
-    private MethodGenerator executeMethod;
-
-    private static final AtomicInteger integer = new AtomicInteger();
+    private static final AtomicInteger classInteger = new AtomicInteger();
     private static final DynamicClassLoader CLASS_LOADER = new DynamicClassLoader();
 
+    private ClassWriter classWriter;
+    private MethodGenerator currentMethod;
+    private Stack<MethodGenerator> methodStack;
+
     private final CatScriptProgram program;
+    private String internalClassName;
+    private String dotClassName;
 
     public ByteCodeGenerator(CatScriptProgram program) {
         this.program = program;
     }
 
-    public CatScriptProgram compileToBytecode() throws Exception {
+    public CatScriptProgram compileToBytecode() {
+        methodStack = new Stack<>();
         classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-        String className = "edu/montana/csci/csci466/bytecode/CatScriptProgram" + integer.incrementAndGet();
-        String dotClassName = className.replace('/', '.');
-        classWriter.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC,
-                className,
-                null,
-                "edu/montana/csci/csci466/parser/statements/CatScriptProgram", null);
+        internalClassName = "edu/montana/csci/csci466/bytecode/CatScriptProgram" + classInteger.incrementAndGet();
+        dotClassName = internalClassName.replace('/', '.');
+        makeClass(internalClassName);
+        makeConstructor();
 
-        try (MethodGenerator constructor = makeMethod(Opcodes.ACC_PUBLIC, "<init>", "()V")) {
-            constructor.addVarInstruction(Opcodes.ALOAD, 0);
-            constructor.addMethodInstruction(Opcodes.INVOKESPECIAL, internalNameFor(CatScriptProgram.class), "<init>", "()V", false);
-            constructor.addInstruction(Opcodes.RETURN);
-        }
-        executeMethod = makeMethod(Opcodes.ACC_PUBLIC, "execute", "()V");
+        currentMethod = makeMethod(Opcodes.ACC_PUBLIC, "execute", "()V");
         program.compile(this);
-        executeMethod.close();
+        currentMethod.close();
 
         classWriter.visitEnd();
         byte[] classBytes = classWriter.toByteArray();
@@ -48,9 +46,32 @@ public class ByteCodeGenerator {
         return loadClass(dotClassName, classBytes);
     }
 
+    private void makeClass(String className) {
+        classWriter.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC,
+                className, null, internalNameFor(CatScriptProgram.class) , null);
+    }
+
+    private void makeConstructor() {
+        try (MethodGenerator constructor = makeMethod(Opcodes.ACC_PUBLIC, "<init>", "()V")) {
+            constructor.addVarInstruction(Opcodes.ALOAD, 0);
+            constructor.addMethodInstruction(Opcodes.INVOKESPECIAL, internalNameFor(CatScriptProgram.class), "<init>", "()V");
+            constructor.addInstruction(Opcodes.RETURN);
+        }
+    }
+
     public static String internalNameFor(Class clazz) {
         final String name = clazz.getName();
         return name.replace(".", "/");
+    }
+
+    public void pushMethod(int access, String name, String descriptor) {
+        methodStack.push(currentMethod);
+        currentMethod = makeMethod(access, name, descriptor);
+    }
+
+    public void popMethod() {
+        currentMethod.close();
+        currentMethod = methodStack.pop();
     }
 
     private MethodGenerator makeMethod(int access, String name, String descriptor) {
@@ -81,6 +102,22 @@ public class ByteCodeGenerator {
         }
     }
 
+    public Integer nextLocalStorageSlot() {
+        return currentMethod.nextLocalStorageSlot();
+    }
+
+    public Integer createLocalStorageSlotFor(String name){
+        return currentMethod.createLocalStorageSlotFor(name);
+    }
+
+    public Integer resolveLocalStorageSlotFor(String name) {
+        return currentMethod.resolveLocalStorageSlotFor(name);
+    }
+
+    public String getProgramInternalName() {
+        return internalClassName;
+    }
+
     static class DynamicClassLoader extends ClassLoader {
         public void defineClass(String name, byte[] bytes) {
             defineClass(name, bytes, 0, bytes.length);
@@ -92,47 +129,43 @@ public class ByteCodeGenerator {
     }
 
     public void addInstruction(int opcode) {
-        executeMethod.addInstruction(opcode);
+        currentMethod.addInstruction(opcode);
     }
 
     public void addIntInstruction(int opcode, int operand) {
-        executeMethod.addIntInstruction(opcode, operand);
+        currentMethod.addIntInstruction(opcode, operand);
     }
 
     public void addVarInstruction(int opcode, int var) {
-        executeMethod.addVarInstruction(opcode, var);
+        currentMethod.addVarInstruction(opcode, var);
     }
 
     public void addTypeInstruction(int opcode, String type) {
-        executeMethod.addTypeInstruction(opcode, type);
+        currentMethod.addTypeInstruction(opcode, type);
     }
 
-    public void addFieldInstruction(int opcode, String owner, String name, String descriptor) {
-        executeMethod.addFieldInstruction(opcode, owner, name, descriptor);
+    public void addFieldInstruction(int opcode, String name, String descriptor, String className) {
+        currentMethod.addFieldInstruction(opcode, className, name, descriptor);
     }
 
-    @Deprecated
     public void addMethodInstruction(int opcode, String owner, String name, String descriptor) {
-        executeMethod.addMethodInstruction(opcode, owner, name, descriptor);
-    }
-
-    public void addMethodInstruction(int opcode, String owner, String name, String descriptor, boolean isInterface) {
-        executeMethod.addMethodInstruction(opcode, owner, name, descriptor, isInterface);
+        currentMethod.addMethodInstruction(opcode, owner, name, descriptor);
     }
 
     public void addJumpInstruction(int opcode, Label label) {
-        executeMethod.addJumpInstruction(opcode, label);
+        currentMethod.addJumpInstruction(opcode, label);
     }
 
     public void addLabel(Label label) {
-        executeMethod.addLabel(label);
+        currentMethod.addLabel(label);
     }
 
     public void pushConstantOntoStack(Object value) {
-        executeMethod.loadConstantValue(value);
+        currentMethod.pushConstantOntoStack(value);
     }
 
-    public void addLineNumber(int line, Label start) {
-        executeMethod.addLineNumber(line, start);
+    public void addField(String name, String descriptor) {
+        FieldVisitor fieldVisitor = classWriter.visitField(Opcodes.ACC_PRIVATE, name, descriptor, null, null);
+        fieldVisitor.visitEnd();
     }
 }

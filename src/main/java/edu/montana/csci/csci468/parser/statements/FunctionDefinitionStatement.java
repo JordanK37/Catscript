@@ -77,6 +77,45 @@ public class FunctionDefinitionStatement extends Statement {
         symbolTable.popScope();
     }
 
+    public Object invoke(CatscriptRuntime runtime, List<Object> args) {
+        runtime.pushScope();
+        int parameterCount = getParameterCount();
+        for (int i = 0; i < parameterCount; i++) {
+            runtime.setValue(getParameterName(i), args.get(i));
+        }
+        Object returnVal = null;
+        try {
+            for (Statement statement : body) {
+                statement.execute(runtime);
+            }
+        } catch (ReturnException re) {
+            returnVal = re.getValue();
+        } finally {
+            runtime.popScope();
+        }
+        return returnVal;
+    }
+
+    public String getDescriptor() {
+        StringBuilder sb = new StringBuilder("(");
+        for (CatscriptType argumentType : argumentTypes) {
+            if (argumentType.equals(CatscriptType.BOOLEAN) || argumentType.equals(CatscriptType.INT)) {
+                sb.append("I");
+            } else {
+                sb.append("L").append(internalNameFor(getType().getJavaType())).append(";");
+            }
+        }
+        sb.append(")");
+        if (type.equals(CatscriptType.VOID)) {
+            sb.append("V");
+        } else if (type.equals(CatscriptType.BOOLEAN) || type.equals(CatscriptType.INT)) {
+            sb.append("I");
+        } else {
+            sb.append("L").append(internalNameFor(getType().getJavaType())).append(";");
+        }
+        return sb.toString();
+    }
+
     //==============================================================
     // Implementation
     //==============================================================

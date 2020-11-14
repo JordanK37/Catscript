@@ -1,5 +1,7 @@
 package edu.montana.csci.csci468;
 
+import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.js.JSTranspiler;
 import edu.montana.csci.csci468.parser.CatScriptParser;
 import edu.montana.csci.csci468.parser.ParseErrorException;
 import edu.montana.csci.csci468.parser.expressions.Expression;
@@ -81,6 +83,41 @@ public class CatscriptTestBase {
         } catch (ParseErrorException parseErrorException) {
             return parseErrorException.getErrors().get(0).getMessage();
         }
-
     }
+
+    protected Object evaluateExpression(String src) {
+        final CatScriptParser parser = new CatScriptParser();
+        final CatScriptProgram program = parser.parse(src);
+        program.verify();
+        return program.getExpression().evaluate();
+    }
+
+    protected Object executeProgram(String src) {
+        final CatScriptParser parser = new CatScriptParser();
+        final CatScriptProgram program = parser.parse(src);
+        program.verify();
+        program.execute();
+        return program.getOutput();
+    }
+
+    protected String transpile(String src) {
+        final CatScriptParser parser = new CatScriptParser();
+        final CatScriptProgram program = parser.parse(src);
+        program.verify();
+        JSTranspiler jsTranspiler = new JSTranspiler(program);
+        System.out.println(jsTranspiler.getJavascriptSource());
+        return jsTranspiler.evaluate();
+    }
+
+    protected String compile(String src) {
+        final CatScriptParser parser = new CatScriptParser();
+        final CatScriptProgram program = parser.parse(src);
+        program.verify();
+        ByteCodeGenerator byteCodeGenerator = new ByteCodeGenerator(program);
+        CatScriptProgram catScriptProgram = byteCodeGenerator.compileToBytecode();
+        catScriptProgram.execute();
+        return catScriptProgram.getOutput();
+    }
+
+
 }

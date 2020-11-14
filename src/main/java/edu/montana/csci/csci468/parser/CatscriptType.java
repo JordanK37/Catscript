@@ -53,6 +53,10 @@ public class CatscriptType {
         return Objects.hash(name);
     }
 
+    public Class getJavaType() {
+        return javaClass;
+    }
+
     public static class ListType extends CatscriptType {
         private final CatscriptType componentType;
         public ListType(CatscriptType componentType) {

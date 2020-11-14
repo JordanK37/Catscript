@@ -15,10 +15,11 @@ public class CatScriptProgram extends Statement {
 
     private StringBuffer output = new StringBuffer();
     private List<Statement> statements = new LinkedList<>();
+    private Map<String, FunctionDefinitionStatement> functions = new HashMap<>();
     private Expression expression;
 
     public void print(Object v) {
-        output.append(v);
+        output.append(v).append("\n");
     }
 
     public String getOutput(){
@@ -26,7 +27,12 @@ public class CatScriptProgram extends Statement {
     }
 
     public void addStatement(Statement child) {
-        statements.add(addChild(child));
+        Statement statement = addChild(child);
+        statements.add(statement);
+        if (statement instanceof FunctionDefinitionStatement) {
+            FunctionDefinitionStatement function = (FunctionDefinitionStatement) statement;
+            functions.put(function.getName(), function);
+        }
     }
 
     public void setExpression(Expression expression) {
@@ -43,6 +49,10 @@ public class CatScriptProgram extends Statement {
 
     public boolean isExpression() {
         return expression != null;
+    }
+
+    public FunctionDefinitionStatement getFunction(String name) {
+        return functions.get(name);
     }
 
     @Override
@@ -88,15 +98,15 @@ public class CatScriptProgram extends Statement {
         if (isExpression()) {
             code.addVarInstruction(Opcodes.ALOAD, 0);
             getExpression().compile(code);
-            code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Integer.class),
-                    "valueOf", "(I)Ljava/lang/Integer;", false);
+            box(code, getExpression().getType());
             code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, internalNameFor(CatScriptProgram.class),
-                    "print", "(Ljava/lang/Object;)V", false);
+                    "print", "(Ljava/lang/Object;)V");
             code.addInstruction(Opcodes.RETURN);
         } else {
             for (Statement statement : statements) {
                 statement.compile(code);
             }
+            code.addInstruction(Opcodes.RETURN);
         }
     }
 

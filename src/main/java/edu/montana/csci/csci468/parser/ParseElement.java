@@ -134,4 +134,14 @@ public abstract class ParseElement {
         throw new UnsupportedOperationException("compile needs to be implemented for " + this.getClass().getName());
     }
 
+
+    protected void box(ByteCodeGenerator code, CatscriptType type) {
+        // TODO - implement
+    }
+
+    protected void unbox(ByteCodeGenerator code, CatscriptType type) {
+        // TODO - implement
+    }
+
+
 }

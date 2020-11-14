@@ -51,7 +51,7 @@ public class ForStatement extends Statement {
             expression.validate(symbolTable);
             CatscriptType type = expression.getType();
             if (type instanceof CatscriptType.ListType) {
-                symbolTable.registerSymbol(variableName, ((CatscriptType.ListType) type).getComponentType());
+                symbolTable.registerSymbol(variableName, getComponentType());
             } else {
                 addError(ParseError.INCOMPATIBLE_TYPES, getStart());
                 symbolTable.registerSymbol(variableName, CatscriptType.OBJECT);
@@ -61,6 +61,10 @@ public class ForStatement extends Statement {
             statement.validate(symbolTable);
         }
         symbolTable.popScope();
+    }
+
+    private CatscriptType getComponentType() {
+        return ((CatscriptType.ListType) expression.getType()).getComponentType();
     }
 
     //==============================================================

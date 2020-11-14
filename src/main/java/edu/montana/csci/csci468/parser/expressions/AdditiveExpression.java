@@ -78,7 +78,7 @@ public class AdditiveExpression extends Expression {
     @Override
     public void transpile(StringBuilder javascript) {
         getLeftHandSide().transpile(javascript);
-        javascript.append(isAdd() ? " + " : " - ");
+        javascript.append(operator.getStringValue());
         getRightHandSide().transpile(javascript);
     }
 

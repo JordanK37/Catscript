@@ -39,7 +39,7 @@ public class CatscriptParserExpressionsTest extends CatscriptTestBase {
         AdditiveExpression expr = parseExpression("1 + (1 + 1)");
         assertTrue(expr.isAdd());
         assertTrue(expr.getLeftHandSide() instanceof IntegerLiteralExpression);
-        assertTrue(expr.getRightHandSide() instanceof AdditiveExpression);
+        assertTrue(expr.getRightHandSide() instanceof ParenthesizedExpression);
     }
 
     @Test

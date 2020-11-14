@@ -48,6 +48,7 @@ public class IfStatement extends Statement {
 
     @Override
     public void validate(SymbolTable symbolTable) {
+        expression.validate(symbolTable);
         if (!expression.getType().equals(CatscriptType.BOOLEAN)) {
             expression.addError(ParseError.INCOMPATIBLE_TYPES);
         }
