@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.expressions;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.statements.FunctionDefinitionStatement;
@@ -40,19 +41,19 @@ public class FunctionCallExpression extends Expression {
     public void validate(SymbolTable symbolTable) {
         FunctionDefinitionStatement function = symbolTable.getFunction(getName());
         if (function == null) {
-            addError(ParseError.UNKNOWN_NAME);
+            addError(ErrorType.UNKNOWN_NAME);
             type = CatscriptType.OBJECT;
         } else {
             type = function.getType();
             if (arguments.size() != function.getParameterCount()) {
-                addError(ParseError.ARG_MISMATCH);
+                addError(ErrorType.ARG_MISMATCH);
             } else {
                 for (int i = 0; i < arguments.size(); i++) {
                     Expression argument = arguments.get(i);
                     argument.validate(symbolTable);
                     CatscriptType parameterType = function.getParameterType(i);
                     if (!parameterType.isAssignableFrom(argument.getType())) {
-                        argument.addError(ParseError.INCOMPATIBLE_TYPES);
+                        argument.addError(ErrorType.INCOMPATIBLE_TYPES);
                     }
                 }
             }

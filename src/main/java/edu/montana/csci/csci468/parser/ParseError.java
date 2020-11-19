@@ -4,28 +4,34 @@ import edu.montana.csci.csci468.tokenizer.Token;
 
 public class ParseError {
 
-    public static final String UNTERMINATED_LIST = "Unterminated list literal";
-    public static final String UNTERMINATED_ARG_LIST = "Unterminated argument list";
-    public static final String BAD_TYPE_NAME = "Bad Type Name";
-    public static final String DUPLICATE_NAME = "This name is already used in this program";
-    public static final String INCOMPATIBLE_TYPES = "Incompatible types";
-    public static final String UNKNOWN_NAME = "This name does not exit in this program";
-    public static final String ARG_MISMATCH = "Wrong number of arguments";
-    public static final String MISSING_RETURN_STATEMENT = "Missing return statement in function";
-
     private Token location;
+    private ErrorType errorType;
     private String message;
 
-    public ParseError(Token location, String message) {
+    public ParseError(Token location, ErrorType errorType, Object... args) {
         this.location = location;
-        this.message = message;
+        this.errorType = errorType;
+        this.message = String.format(errorType.toString(), args);
     }
 
     public Token getLocation() {
         return location;
     }
 
-    public String getMessage() {
-        return message;
+    public ErrorType getErrorType() {
+        return errorType;
+    }
+
+    public String getFullMessage() {
+        StringBuilder sb = new StringBuilder();
+        String lineStart = "Line " + location.getLine() + ":";
+        sb.append(lineStart);
+        sb.append(location.getLineContent());
+        sb.append("\n");
+        sb.append(" ".repeat(lineStart.length() + location.getLineOffset()));
+        sb.append("^\n\n");
+        sb.append("Error: ");
+        sb.append(message);
+        return sb.toString();
     }
 }

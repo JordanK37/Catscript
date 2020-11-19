@@ -3,6 +3,8 @@ package edu.montana.csci.csci468;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.js.JSTranspiler;
 import edu.montana.csci.csci468.parser.CatScriptParser;
+import edu.montana.csci.csci468.parser.ErrorType;
+import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.ParseErrorException;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
@@ -13,6 +15,7 @@ import edu.montana.csci.csci468.tokenizer.TokenList;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,14 +77,14 @@ public class CatscriptTestBase {
         assertEquals(Arrays.asList(expected), tokens.stream().map(Token::getStringValue).collect(Collectors.toList()));
     }
 
-    protected String getParseError(String src) {
+    protected ErrorType getParseError(String src) {
         final CatScriptParser parser = new CatScriptParser();
         final CatScriptProgram program = parser.parse(src);
         try {
             program.verify();
             throw new IllegalStateException("The code " + src + " did not throw an error!");
         } catch (ParseErrorException parseErrorException) {
-            return parseErrorException.getErrors().get(0).getMessage();
+            return parseErrorException.getErrors().get(0).getErrorType();
         }
     }
 
@@ -119,5 +122,15 @@ public class CatscriptTestBase {
         return catScriptProgram.getOutput();
     }
 
+    protected List<ParseError> getErrors(String src) {
+        final CatScriptParser parser = new CatScriptParser();
+        final CatScriptProgram program = parser.parse(src);
+        try {
+            program.verify();
+            return Collections.emptyList();
+        } catch (ParseErrorException parseErrorException) {
+            return parseErrorException.getErrors();
+        }
+    }
 
 }

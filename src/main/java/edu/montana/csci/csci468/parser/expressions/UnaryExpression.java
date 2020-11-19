@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.expressions;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
@@ -39,9 +40,9 @@ public class UnaryExpression extends Expression {
     public void validate(SymbolTable symbolTable) {
         rightHandSide.validate(symbolTable);
         if (isNot() && !rightHandSide.getType().equals(CatscriptType.BOOLEAN)) {
-            addError(ParseError.INCOMPATIBLE_TYPES);
+            addError(ErrorType.INCOMPATIBLE_TYPES);
         } else if(isMinus() && !rightHandSide.getType().equals(CatscriptType.INT)) {
-            addError(ParseError.INCOMPATIBLE_TYPES);
+            addError(ErrorType.INCOMPATIBLE_TYPES);
         }
     }
 

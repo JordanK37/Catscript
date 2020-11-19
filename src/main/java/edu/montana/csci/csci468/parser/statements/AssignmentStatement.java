@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.statements;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
@@ -31,7 +32,7 @@ public class AssignmentStatement extends Statement {
     public void validate(SymbolTable symbolTable) {
         CatscriptType symbolType = symbolTable.getSymbolType(getVariableName());
         if (symbolType == null) {
-            addError(ParseError.UNKNOWN_NAME);
+            addError(ErrorType.UNKNOWN_NAME);
         } else {
             // TOOD - verify compatilibity of types
         }

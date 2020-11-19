@@ -64,12 +64,12 @@ public abstract class ParseElement {
         return !errors.isEmpty();
     }
 
-    public void addError(String errorMessage) {
-        addError(errorMessage, getStart());
+    public void addError(ErrorType errorType, Object... args) {
+        addError(errorType, getStart(), args);
     }
 
-    public void addError(String errorMessage, Token token) {
-        errors.add(new ParseError(token, errorMessage));
+    public void addError(ErrorType errorMessage, Token token, Object... args) {
+        errors.add(new ParseError(token, errorMessage, args));
     }
 
     protected <T extends ParseElement> T addChild(T element) {
@@ -87,8 +87,8 @@ public abstract class ParseElement {
         return this.getClass().getSimpleName();
     }
 
-    public boolean hasError(String errorMessage) {
-        return errors.stream().anyMatch(parseError -> Objects.equals(parseError.getMessage(), errorMessage));
+    public boolean hasError(ErrorType errorMessage) {
+        return errors.stream().anyMatch(parseError -> Objects.equals(parseError.getErrorType(), errorMessage));
     }
 
     private void registerFunctions(SymbolTable symbolTable) {
@@ -96,7 +96,7 @@ public abstract class ParseElement {
             if (child instanceof FunctionDefinitionStatement) {
                 FunctionDefinitionStatement func = (FunctionDefinitionStatement) child;
                 if (symbolTable.hasSymbol(func.getName())) {
-                    func.addError(ParseError.DUPLICATE_NAME);
+                    func.addError(ErrorType.DUPLICATE_NAME);
                 } else {
                     symbolTable.registerFunction(func.getName(), func);
                 }

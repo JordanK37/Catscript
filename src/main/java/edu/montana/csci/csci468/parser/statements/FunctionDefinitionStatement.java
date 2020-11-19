@@ -2,13 +2,18 @@ package edu.montana.csci.csci468.parser.statements;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
+import edu.montana.csci.csci468.eval.ReturnException;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
+import edu.montana.csci.csci468.parser.expressions.TypeLiteral;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static edu.montana.csci.csci468.bytecode.ByteCodeGenerator.internalNameFor;
 
 public class FunctionDefinitionStatement extends Statement {
     private String name;
@@ -76,7 +81,7 @@ public class FunctionDefinitionStatement extends Statement {
         symbolTable.pushScope();
         for (int i = 0; i < getParameterCount(); i++) {
             if (symbolTable.hasSymbol(getParameterName(i))) {
-                addError(ParseError.DUPLICATE_NAME);
+                addError(ErrorType.DUPLICATE_NAME);
             } else {
                 symbolTable.registerSymbol(getParameterName(i), getParameterType(i));
             }
@@ -85,8 +90,10 @@ public class FunctionDefinitionStatement extends Statement {
             statement.validate(symbolTable);
         }
         symbolTable.popScope();
-        if (!validateReturnCoverage(body)) {
-            addError(ParseError.MISSING_RETURN_STATEMENT);
+        if (!type.equals(CatscriptType.VOID)) {
+            if (!validateReturnCoverage(body)) {
+                addError(ErrorType.MISSING_RETURN_STATEMENT);
+            }
         }
     }
 

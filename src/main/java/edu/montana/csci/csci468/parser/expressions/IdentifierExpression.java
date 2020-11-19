@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.expressions;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 
@@ -27,7 +28,7 @@ public class IdentifierExpression extends Expression {
     public void validate(SymbolTable symbolTable) {
         CatscriptType type = symbolTable.getSymbolType(getName());
         if (type == null) {
-            addError(ParseError.UNKNOWN_NAME);
+            addError(ErrorType.UNKNOWN_NAME);
         } else {
             this.type = type;
         }

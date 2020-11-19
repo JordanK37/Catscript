@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.statements;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
@@ -45,7 +46,7 @@ public class VariableStatement extends Statement {
     public void validate(SymbolTable symbolTable) {
         expression.validate(symbolTable);
         if (symbolTable.hasSymbol(variableName)) {
-            addError(ParseError.DUPLICATE_NAME);
+            addError(ErrorType.DUPLICATE_NAME);
         } else {
             // TODO if there is an explicit type, ensure it is correct
             //      if not, infer the type from the right hand side expression

@@ -88,7 +88,7 @@ public class CatscriptParserExpressionsTest extends CatscriptTestBase {
     public void parseUnterminatedListLiteralExpression() {
         ListLiteralExpression expr = parseExpression("[1, 2", false);
         assertEquals(2, expr.getValues().size());
-        assertTrue(expr.hasError(ParseError.UNTERMINATED_LIST));
+        assertTrue(expr.hasError(ErrorType.UNTERMINATED_LIST));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CatscriptParserExpressionsTest extends CatscriptTestBase {
         FunctionCallExpression expr = parseExpression("foo(1, 2", false);
         assertEquals("foo", expr.getName());
         assertEquals(2, expr.getArguments().size());
-        assertTrue(expr.hasError(ParseError.UNTERMINATED_ARG_LIST));
+        assertTrue(expr.hasError(ErrorType.UNTERMINATED_ARG_LIST));
     }
 
     @Test

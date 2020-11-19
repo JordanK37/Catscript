@@ -13,7 +13,7 @@ public class ParseErrorException extends RuntimeException {
     private static String makeMessage(List<ParseError> errors) {
         StringBuilder errorMessage = new StringBuilder("Parse Errors Occurred:\n\n");
         for (ParseError error : errors) {
-            errorMessage.append("  Line ").append(error.getLocation().getLine()).append(" : ").append(error.getMessage()).append("\n");
+            errorMessage.append(error.getFullMessage()).append("\n\n");
         }
         return errorMessage.toString();
     }

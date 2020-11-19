@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.expressions;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
@@ -37,10 +38,10 @@ public class AdditiveExpression extends Expression {
         rightHandSide.validate(symbolTable);
         if (getType().equals(CatscriptType.INT)) {
             if (!leftHandSide.getType().equals(CatscriptType.INT)) {
-                leftHandSide.addError(ParseError.INCOMPATIBLE_TYPES);
+                leftHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
             }
             if (!rightHandSide.getType().equals(CatscriptType.INT)) {
-                rightHandSide.addError(ParseError.INCOMPATIBLE_TYPES);
+                rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
             }
         }
     }

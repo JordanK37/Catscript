@@ -8,14 +8,16 @@ public class Token {
     int lineOffset;
     String stringValue;
     TokenType type;
+    private final CatScriptTokenizer tokenizer;
 
-    public Token(int start, int end, int line, int lineOffset, String stringValue, TokenType type) {
+    public Token(int start, int end, int line, int lineOffset, String stringValue, TokenType type, CatScriptTokenizer tokenizer) {
         this.start = start;
         this.end = end;
         this.line = line;
         this.lineOffset = lineOffset;
         this.stringValue = stringValue;
         this.type = type;
+        this.tokenizer = tokenizer;
     }
 
     public int getStart() {
@@ -51,5 +53,10 @@ public class Token {
                 ", line=" + line +
                 ", offset=" + lineOffset +
                 '}';
+    }
+
+    public String getLineContent() {
+        String[] lines = tokenizer.src.split("\n");
+        return lines[line - 1];
     }
 }

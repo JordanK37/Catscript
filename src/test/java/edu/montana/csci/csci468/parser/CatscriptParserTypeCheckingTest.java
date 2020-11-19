@@ -47,34 +47,34 @@ public class CatscriptParserTypeCheckingTest extends CatscriptTestBase {
 
     @Test
     void varTypeError() {
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("var x : bool = 10"));
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("var x : bool = 10"));
     }
 
     @Test
     void assignmentTypeError() {
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("var x = 10\n" +
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("var x = 10\n" +
                 "x = true"));
     }
 
     @Test
     void unaryTypeError() {
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("not 1"));
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("- true"));
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("not 1"));
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("- true"));
     }
 
     @Test
     void factorTypeError() {
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("true * false"));
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("true * false"));
     }
 
     @Test
     void additiveTypeError() {
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("1 + true"));
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("1 + true"));
     }
 
     @Test
     void comparativeTypeError() {
-        assertEquals(ParseError.INCOMPATIBLE_TYPES, getParseError("1 > true"));
+        assertEquals(ErrorType.INCOMPATIBLE_TYPES, getParseError("1 > true"));
     }
 
 

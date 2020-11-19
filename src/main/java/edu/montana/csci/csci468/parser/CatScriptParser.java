@@ -114,10 +114,10 @@ public class CatScriptParser {
     //  Parse Helpers
     //============================================================
     private Token require(TokenType type, ParseElement elt) {
-        return require(type, elt, "Unexpected Token");
+        return require(type, elt, ErrorType.UNEXPECTED_TOKEN);
     }
 
-    private Token require(TokenType type, ParseElement elt, String msg) {
+    private Token require(TokenType type, ParseElement elt, ErrorType msg) {
         if(tokens.match(type)){
             return tokens.consumeToken();
         } else {
