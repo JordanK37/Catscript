@@ -1,5 +1,39 @@
 # CSCI 466: Compilers
 
+This is the base upstream repository for CSCI 468, compilers.  It holds the base code for the compiler that we will
+write for the class.  The project will be done in pairs.  Note that this class is a capstone class in the CSCI department
+and, as such, requires capstone documentation.  An outline of this can be found in the `/capstone` directory.
+
+## Getting Your Repo Set Up
+
+For the project leader, please follow these instructions
+
+- Create a *private* repository in your own account by
+    - Going to <https://github.com/new>
+    - Enter the name `esof-322-fall2020-private`
+    - Select `Private`
+    - Navigate to the `Settings` -> `Manage Access` section
+    - Add `1cg` as a collaborator
+    - Add your partner as a collaborator
+
+Once your repository is initialized, you and your partner can pull it down to your local machines.  Instructions can
+be found on the home page of your new repository.
+
+Next, you and your partner should both add the class repository as an upstream git repo:
+
+```bash
+$ git remote add upstream https://github.com/msu/esof-322-spring2021.git
+$ git pull upstream master
+$ git push origin master
+```
+This will synchronize your private repository with the class repository.
+
+When you want to get an update from the public class repository you can run this command:
+
+```
+$ git pull upstream master
+```
+
 ## CatScript
 
 In this course we will be creating a small programming language called CatScript
