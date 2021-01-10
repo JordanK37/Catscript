@@ -1,4 +1,4 @@
-# CSCI 466: Compilers
+# CSCI 468: Compilers
 
 This is the base upstream repository for CSCI 468, compilers.  It holds the base code for the compiler that we will
 write for the class.  The project will be done in pairs.  Note that this class is a capstone class in the CSCI department
@@ -10,7 +10,7 @@ For the project leader, please follow these instructions
 
 - Create a *private* repository in your own account by
     - Going to <https://github.com/new>
-    - Enter the name `csci-468-fall2020-private`
+    - Enter the name `csci-468-spring2021-private`
     - Select `Private`
     - Navigate to the `Settings` -> `Manage Access` section
     - Add `1cg` as a collaborator
