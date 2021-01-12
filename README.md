@@ -23,8 +23,8 @@ Next, you and your partner should both add the class repository as an upstream g
 
 ```bash
 $ git remote add upstream https://github.com/msu/csci-468-spring2021.git
-$ git pull upstream master
-$ git push origin master
+$ git pull upstream main
+$ git push origin main
 ```
 This will synchronize your private repository with the class repository.
 
