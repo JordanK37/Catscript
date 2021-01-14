@@ -40,7 +40,7 @@ In this course we will be creating a small programming language called CatScript
 
 ### CatScript Grammar
 
-```
+```ebnf
 catscript_program = { program_statement };
 
 program_statement = statement |
