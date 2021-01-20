@@ -12,6 +12,7 @@ For the project leader, please follow these instructions
     - Going to <https://github.com/new>
     - Enter the name `csci-468-spring2021-private`
     - Select `Private`
+    - **DO NOT ADD A README.MD or .gitignore!**
     - Navigate to the `Settings` -> `Manage Access` section
     - Add `1cg` as a collaborator
     - Add your partner as a collaborator
@@ -24,7 +25,7 @@ Next, you and your partner should both add the class repository as an upstream g
 ```bash
 $ git remote add upstream https://github.com/msu/csci-468-spring2021.git
 $ git pull upstream main
-$ git push origin main
+$ git push
 ```
 This will synchronize your private repository with the class repository.
 
