@@ -60,7 +60,8 @@ if_statement = 'if', '(', expression, ')', '{', { statement }, '}' [ 'else', '{'
 
 print_statement = 'print', '(', expression, ')'
 
-variable_statement = 'var', identifier, [':', type_expression, ] '=', expression;
+variable_statement = 'var', identifier, 
+     [':', type_expression, ] '=', expression;
 
 function_call_statement = function_call;
 
