@@ -10,10 +10,9 @@ import java.util.Map;
 public class SymbolTable {
 
     LinkedList<Map<String, Object>> symbolStack = new LinkedList<>();
-    HashMap<String, Object> globalScope;
 
     public SymbolTable(){
-        globalScope = new HashMap<>();
+        HashMap<String, Object> globalScope = new HashMap<>();
         symbolStack.push(globalScope);
     }
 
