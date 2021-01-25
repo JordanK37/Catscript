@@ -1,4 +1,4 @@
-# CSCI 466: Compilers
+# CSCI 468: Compilers
 
 This is the base upstream repository for CSCI 468, compilers.  It holds the base code for the compiler that we will
 write for the class.  The project will be done in pairs.  Note that this class is a capstone class in the CSCI department
@@ -10,8 +10,9 @@ For the project leader, please follow these instructions
 
 - Create a *private* repository in your own account by
     - Going to <https://github.com/new>
-    - Enter the name `esof-322-fall2020-private`
+    - Enter the name `csci-468-spring2021-private`
     - Select `Private`
+    - **DO NOT ADD A README.MD or .gitignore!**
     - Navigate to the `Settings` -> `Manage Access` section
     - Add `1cg` as a collaborator
     - Add your partner as a collaborator
@@ -22,16 +23,16 @@ be found on the home page of your new repository.
 Next, you and your partner should both add the class repository as an upstream git repo:
 
 ```bash
-$ git remote add upstream https://github.com/msu/esof-322-spring2021.git
-$ git pull upstream master
-$ git push origin master
+$ git remote add upstream https://github.com/msu/csci-468-spring2021.git
+$ git pull upstream main
+$ git push
 ```
 This will synchronize your private repository with the class repository.
 
 When you want to get an update from the public class repository you can run this command:
 
 ```
-$ git pull upstream master
+$ git pull upstream main
 ```
 
 ## CatScript
@@ -40,7 +41,7 @@ In this course we will be creating a small programming language called CatScript
 
 ### CatScript Grammar
 
-```
+```ebnf
 catscript_program = { program_statement };
 
 program_statement = statement |
@@ -59,7 +60,8 @@ if_statement = 'if', '(', expression, ')', '{', { statement }, '}' [ 'else', '{'
 
 print_statement = 'print', '(', expression, ')'
 
-variable_statement = 'var', identifier, [':', type_expression, ] '=', expression;
+variable_statement = 'var', identifier, 
+     [':', type_expression, ] '=', expression;
 
 function_call_statement = function_call;
 
@@ -112,3 +114,5 @@ CatScript is statically typed, with a small type system as follows
 * list<x> - a list of value with the type 'x'
 * null - the null type 
 * object - any type of value
+
+:)
