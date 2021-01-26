@@ -54,7 +54,8 @@ statement = for_statement |
             assignment_statement |
             function_call_statement;
 
-for_statement = 'for', '(', identifier, 'in', expression ')', '{', { statement }, '}';
+for_statement = 'for', '(', identifier, 'in', expression ')', 
+                '{', { statement }, '}';
 
 if_statement = 'if', '(', expression, ')', '{', 
                     { statement }, 
