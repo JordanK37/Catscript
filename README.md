@@ -56,7 +56,9 @@ statement = for_statement |
 
 for_statement = 'for', '(', identifier, 'in', expression ')', '{', { statement }, '}';
 
-if_statement = 'if', '(', expression, ')', '{', { statement }, '}' [ 'else', '{', { statement }, '}' ];
+if_statement = 'if', '(', expression, ')', '{', 
+                    { statement }, 
+               '}' [ 'else', ( if_statement | '{', { statement }, '}' ) ];
 
 print_statement = 'print', '(', expression, ')'
 
