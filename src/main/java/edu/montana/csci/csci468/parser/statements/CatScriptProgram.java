@@ -75,7 +75,7 @@ public class CatScriptProgram extends Statement {
     @Override
     public void execute(CatscriptRuntime runtime) {
         if (expression != null) {
-            print(expression.evaluate());
+            print(expression.evaluate(runtime));
         } else {
             for (Statement statement : statements) {
                 statement.execute(runtime);

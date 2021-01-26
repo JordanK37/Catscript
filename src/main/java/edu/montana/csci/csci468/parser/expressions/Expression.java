@@ -7,10 +7,6 @@ import edu.montana.csci.csci468.parser.ParseElement;
 
 public abstract class Expression extends ParseElement {
 
-    public final Object evaluate() {
-        return evaluate(new CatscriptRuntime());
-    }
-
     public Object evaluate(CatscriptRuntime runtime) {
         throw new UnsupportedOperationException("evaluate needs to be implemented for " + this.getClass().getName());
     }
