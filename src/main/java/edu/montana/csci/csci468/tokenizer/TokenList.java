@@ -96,11 +96,11 @@ public class TokenList implements Iterable<Token> {
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
             if (i == currentToken) {
-                sb.append("--> ");
+                sb.append("-->[");
             }
             sb.append(token.getStringValue());
             if (i == currentToken) {
-                sb.append(" <--");
+                sb.append("]<--");
             }
             sb.append(" ");
         }
