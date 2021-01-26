@@ -54,20 +54,23 @@ statement = for_statement |
             assignment_statement |
             function_call_statement;
 
-for_statement = 'for', '(', identifier, 'in', expression ')', '{', { statement }, '}';
+for_statement = 'for', '(', IDENTIFIER, 'in', expression ')', 
+                '{', { statement }, '}';
 
-if_statement = 'if', '(', expression, ')', '{', { statement }, '}' [ 'else', '{', { statement }, '}' ];
+if_statement = 'if', '(', expression, ')', '{', 
+                    { statement }, 
+               '}' [ 'else', ( if_statement | '{', { statement }, '}' ) ];
 
 print_statement = 'print', '(', expression, ')'
 
-variable_statement = 'var', identifier, 
+variable_statement = 'var', IDENTIFIER, 
      [':', type_expression, ] '=', expression;
 
 function_call_statement = function_call;
 
-assignment_statement = identifier, '=', expression;
+assignment_statement = IDENTIFIER, '=', expression;
 
-function_declaration = 'function', identifier, '(', parameter_list, ')' + 
+function_declaration = 'function', IDENTIFIER, '(', parameter_list, ')' + 
                        [ ':' + type_expression ] + "{" + { function_body_statement } + "}";
 
 function_body_statement = statement |
