@@ -69,6 +69,10 @@ public class CatScriptProgram extends Statement {
         }
     }
 
+    public void execute() {
+        execute(new CatscriptRuntime());
+    }
+
     //==============================================================
     // Implementation
     //==============================================================

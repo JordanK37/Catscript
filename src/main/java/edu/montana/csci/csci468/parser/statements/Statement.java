@@ -6,10 +6,6 @@ import edu.montana.csci.csci468.parser.ParseElement;
 
 public abstract class Statement extends ParseElement {
 
-    public void execute() {
-        execute(new CatscriptRuntime());
-    }
-
     public void execute(CatscriptRuntime runtime) {
         throw new UnsupportedOperationException("execute needs to be implemented for " + this.getClass().getName());
     }
