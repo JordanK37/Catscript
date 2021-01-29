@@ -44,6 +44,16 @@ public class CatScriptTokenizerTest extends CatscriptTestBase {
         assertTokensAre("\"asdf \"asdf\"", STRING, IDENTIFIER, ERROR, EOF);
     }
 
+
+    @Test
+    public void escapedStrings(){
+        // this is the string "asdf\"asdf", with an escaped quote in it
+        assertTokensAre("\"asdf\\\"asdf\"", STRING, EOF);
+
+        // this is the string "asdf\", with an escape at the end of in it
+        assertTokensAre("\"asdf\\", ERROR, EOF);
+    }
+
     @Test
     public void basicIdentifiers(){
         assertTokensAre("asdf", IDENTIFIER, EOF);
