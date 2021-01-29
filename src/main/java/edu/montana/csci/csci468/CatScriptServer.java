@@ -3,6 +3,8 @@ package edu.montana.csci.csci468;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.js.JSTranspiler;
 import edu.montana.csci.csci468.parser.CatScriptParser;
+import edu.montana.csci.csci468.parser.ParseError;
+import edu.montana.csci.csci468.parser.ParseErrorException;
 import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
 import edu.montana.csci.csci468.tokenizer.CatScriptTokenizer;
 import edu.montana.csci.csci468.tokenizer.TokenList;
@@ -14,6 +16,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
@@ -59,26 +62,45 @@ class CatScriptServer {
         get("/evaluate", (req, resp) -> {
             String source = req.queryParams("src");
             CatScriptProgram program = new CatScriptParser().parse(source);
-            program.execute();
-            return program.getOutput();
+            try {
+                program.verify();
+                program.execute();
+                return program.getOutput();
+            } catch (ParseErrorException parseErrorException) {
+                parseErrorException.printStackTrace();
+                return "<pre>" + parseErrorException.getMessage() + "</pre>";
+            }
         });
 
         get("/transpile", (req, resp) -> {
             String source = req.queryParams("src");
+
             CatScriptProgram program = new CatScriptParser().parse(source);
-            JSTranspiler jsTranspiler = new JSTranspiler(program);
-            String jsSource = jsTranspiler.getJavascriptSource();
-            String output = jsTranspiler.evaluate();
-            return "<pre>" + "\n\n  Source =================\n\n" + jsSource + "\n\n  Output =================\n\n" + output + "</pre>";
+            try {
+                program.verify();
+                JSTranspiler jsTranspiler = new JSTranspiler(program);
+                String jsSource = jsTranspiler.getJavascriptSource();
+                String output = jsTranspiler.evaluate();
+                return "<pre>" + "\n\n  Source =================\n\n" + jsSource + "\n\n  Output =================\n\n" + output + "</pre>";
+            } catch (ParseErrorException parseErrorException) {
+                parseErrorException.printStackTrace();
+                return "<pre>" + parseErrorException.getMessage() + "</pre>";
+            }
         });
 
         get("/compile", (req, resp) -> {
             String source = req.queryParams("src");
             CatScriptProgram program = new CatScriptParser().parse(source);
-            ByteCodeGenerator byteCodeGenerator = new ByteCodeGenerator(program);
-            CatScriptProgram compiledProgram = byteCodeGenerator.compileToBytecode();
-            compiledProgram.execute();
-            return compiledProgram.getOutput();
+            try {
+                program.verify();
+                ByteCodeGenerator byteCodeGenerator = new ByteCodeGenerator(program);
+                CatScriptProgram compiledProgram = byteCodeGenerator.compileToBytecode();
+                compiledProgram.execute();
+                return compiledProgram.getOutput();
+            } catch (ParseErrorException parseErrorException) {
+                parseErrorException.printStackTrace();
+                return "<pre>" + parseErrorException.getMessage() + "</pre>";
+            }
         });
 
     }

@@ -28,7 +28,7 @@ public class ParseError {
         sb.append(lineStart);
         sb.append(location.getLineContent());
         sb.append("\n");
-        sb.append(" ".repeat(lineStart.length() + location.getLineOffset()));
+        sb.append(" ".repeat(lineStart.length() + location.getLineOffset() - 1));
         sb.append("^\n\n");
         sb.append("Error: ");
         sb.append(message);
