@@ -21,7 +21,7 @@ public class TokenList implements Iterable<Token> {
     }
 
     void addToken(TokenType eof, String stringValue, int start, int end, int line, int lineOffset) {
-        tokens.add(new Token(start, end, line, lineOffset, stringValue, eof, tokenizer));
+        tokens.add(new Token(start, end, line, lineOffset - 1, stringValue, eof, tokenizer));
     }
 
     public Token getCurrentToken() {
