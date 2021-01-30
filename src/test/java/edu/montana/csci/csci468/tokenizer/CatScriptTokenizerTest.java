@@ -111,10 +111,12 @@ public class CatScriptTokenizerTest extends CatscriptTestBase {
 
     @Test
     public void lineOffsetsAreCorrect() {
-        final List<Token> tokenList = getTokensAsList("a\n b\n  c d");
+        final List<Token> tokenList = getTokensAsList("a\n b\n  c d\nfoo");
         assertEquals(0, tokenList.get(0).getLineOffset());
         assertEquals(1, tokenList.get(1).getLineOffset());
         assertEquals(2, tokenList.get(2).getLineOffset());
+        assertEquals(4, tokenList.get(3).getLineOffset());
+        assertEquals(0, tokenList.get(4).getLineOffset());
     }
 
     @Test
