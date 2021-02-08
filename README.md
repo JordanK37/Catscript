@@ -86,7 +86,7 @@ expression = equality_expression;
 
 equality_expression = comparison_expression { ("!=" | "==") comparison_expression };
 
-comparison_expression = term_expression { (">" | ">=" | "<" | "<=" ) additive_expression };
+comparison_expression = additive_expression { (">" | ">=" | "<" | "<=" ) additive_expression };
 
 additive_expression = factor_expression { ("+" | "-" ) factor_expression };
 
