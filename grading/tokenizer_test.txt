@@ -24,24 +24,24 @@
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest
-[ERROR] Tests run: 15, Failures: 8, Errors: 0, Skipped: 0, Time elapsed: 0.094 s <<< FAILURE! - in edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest
-[ERROR] linesAreCorrect  Time elapsed: 0.037 s  <<< FAILURE!
+[ERROR] Tests run: 15, Failures: 8, Errors: 0, Skipped: 0, Time elapsed: 0.053 s <<< FAILURE! - in edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest
+[ERROR] linesAreCorrect  Time elapsed: 0.027 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <2> but was: <1>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.linesAreCorrect(CatScriptTokenizerTest.java:98)
 
-[ERROR] basicString  Time elapsed: 0.012 s  <<< FAILURE!
+[ERROR] basicString  Time elapsed: 0.006 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <[STRING, EOF]> but was: <[ERROR, IDENTIFIER, ERROR, EOF]>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.basicString(CatScriptTokenizerTest.java:33)
 
-[ERROR] basicSyntax  Time elapsed: 0.002 s  <<< FAILURE!
+[ERROR] basicSyntax  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <[LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, LEFT_BRACKET, RIGHT_BRACKET, COLON, COMMA, DOT, MINUS, PLUS, SLASH, STAR, BANG_EQUAL, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, EOF]> but was: <[ERROR, ERROR, ERROR, ERROR, ERROR, ERROR, ERROR, ERROR, ERROR, MINUS, PLUS, ERROR, ERROR, ERROR, EQUAL, EQUAL, EQUAL_EQUAL, ERROR, ERROR, EQUAL, ERROR, ERROR, EQUAL, EOF]>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.basicSyntax(CatScriptTokenizerTest.java:65)
 
-[ERROR] compoundTokensTokenizeProperly  Time elapsed: 0.002 s  <<< FAILURE!
+[ERROR] compoundTokensTokenizeProperly  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <[STRING, DOT, STRING, EOF]> but was: <[ERROR, ERROR, ERROR, ERROR, ERROR, EOF]>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.compoundTokensTokenizeProperly(CatScriptTokenizerTest.java:86)
 
-[ERROR] commentsAreIgnored  Time elapsed: 0.002 s  <<< FAILURE!
+[ERROR] commentsAreIgnored  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <[SLASH, SLASH, EOF]> but was: <[ERROR, ERROR, ERROR, ERROR, ERROR, ERROR, ERROR, IDENTIFIER, ERROR, IDENTIFIER, ERROR, ERROR, ERROR, ERROR, IDENTIFIER, EOF]>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.commentsAreIgnored(CatScriptTokenizerTest.java:78)
 
@@ -49,11 +49,11 @@ org.opentest4j.AssertionFailedError: expected: <[SLASH, SLASH, EOF]> but was: <[
 org.opentest4j.AssertionFailedError: expected: <[LEFT_BRACKET, INTEGER, COMMA, INTEGER, COMMA, INTEGER, RIGHT_BRACKET, EOF]> but was: <[ERROR, INTEGER, ERROR, INTEGER, ERROR, INTEGER, ERROR, EOF]>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.listLiteralTokenization(CatScriptTokenizerTest.java:91)
 
-[ERROR] lineOffsetsAreCorrect  Time elapsed: 0.002 s  <<< FAILURE!
+[ERROR] lineOffsetsAreCorrect  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.lineOffsetsAreCorrect(CatScriptTokenizerTest.java:106)
 
-[ERROR] unterminatedStrings  Time elapsed: 0.002 s  <<< FAILURE!
+[ERROR] unterminatedStrings  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <[ERROR, EOF]> but was: <[ERROR, IDENTIFIER, EOF]>
 	at edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest.unterminatedStrings(CatScriptTokenizerTest.java:42)
 
@@ -75,8 +75,8 @@ org.opentest4j.AssertionFailedError: expected: <[ERROR, EOF]> but was: <[ERROR, 
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.716 s
-[INFO] Finished at: 2021-02-09T11:03:46-07:00
+[INFO] Total time:  1.858 s
+[INFO] Finished at: 2021-02-11T08:46:40-07:00
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.1:test (default-test) on project CSCI_466_Project: There are test failures.
 [ERROR] 
