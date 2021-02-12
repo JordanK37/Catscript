@@ -66,8 +66,8 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        Integer lhsValue = (Integer) leftHandSide.evaluate();
-        Integer rhsValue = (Integer) rightHandSide.evaluate();
+        Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
+        Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
         //TODO handle string case
         if (isAdd()) {
             return lhsValue + rhsValue;

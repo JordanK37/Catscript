@@ -1,6 +1,7 @@
 package edu.montana.csci.csci468;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
+import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.js.JSTranspiler;
 import edu.montana.csci.csci468.parser.CatScriptParser;
 import edu.montana.csci.csci468.parser.ErrorType;
@@ -92,7 +93,7 @@ public class CatscriptTestBase {
         final CatScriptParser parser = new CatScriptParser();
         final CatScriptProgram program = parser.parse(src);
         program.verify();
-        return program.getExpression().evaluate();
+        return program.getExpression().evaluate(new CatscriptRuntime());
     }
 
     protected Object executeProgram(String src) {

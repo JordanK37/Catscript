@@ -44,6 +44,16 @@ public class CatScriptTokenizerTest extends CatscriptTestBase {
         assertTokensAre("\"asdf \"asdf\"", STRING, IDENTIFIER, ERROR, EOF);
     }
 
+
+    @Test
+    public void escapedStrings(){
+        // this is the string "asdf\"asdf", with an escaped quote in it
+        assertTokensAre("\"asdf\\\"asdf\"", STRING, EOF);
+
+        // this is the string "asdf\", with an escape at the end of in it
+        assertTokensAre("\"asdf\\", ERROR, EOF);
+    }
+
     @Test
     public void basicIdentifiers(){
         assertTokensAre("asdf", IDENTIFIER, EOF);
@@ -101,10 +111,12 @@ public class CatScriptTokenizerTest extends CatscriptTestBase {
 
     @Test
     public void lineOffsetsAreCorrect() {
-        final List<Token> tokenList = getTokensAsList("a\n b\n  c");
+        final List<Token> tokenList = getTokensAsList("a\n b\n  c d\nfoo");
         assertEquals(0, tokenList.get(0).getLineOffset());
         assertEquals(1, tokenList.get(1).getLineOffset());
         assertEquals(2, tokenList.get(2).getLineOffset());
+        assertEquals(4, tokenList.get(3).getLineOffset());
+        assertEquals(0, tokenList.get(4).getLineOffset());
     }
 
     @Test
