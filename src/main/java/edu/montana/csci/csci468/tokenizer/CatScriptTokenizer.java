@@ -50,6 +50,9 @@ public class CatScriptTokenizer {
             if (matchAndConsume('"')) {
                 return true;
             }
+            else{
+                tokenList.addToken(ERROR, "<End of string token expected>", start, postion, line, lineOffset);
+            }
         }
         return false;
     }
@@ -130,6 +133,11 @@ public class CatScriptTokenizer {
         }
         else if (matchAndConsume('/')) {
             tokenList.addToken((SLASH), "/", start, postion, line, lineOffset);
+            if (matchAndConsume('/')) {
+                while(!tokenizationEnd()){
+                    takeChar();
+                }
+            }
         }
         else if (matchAndConsume('*')) {
             tokenList.addToken((STAR), "*", start, postion, line, lineOffset);
@@ -167,6 +175,7 @@ public class CatScriptTokenizer {
             } else if (c == '\n') {
                 postion++;
                 line++;
+                lineOffset++;
                 continue;
             }
             break;
