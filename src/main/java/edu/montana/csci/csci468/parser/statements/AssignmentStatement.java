@@ -30,6 +30,7 @@ public class AssignmentStatement extends Statement {
 
     @Override
     public void validate(SymbolTable symbolTable) {
+        expression.validate(symbolTable);
         CatscriptType symbolType = symbolTable.getSymbolType(getVariableName());
         if (symbolType == null) {
             addError(ErrorType.UNKNOWN_NAME);

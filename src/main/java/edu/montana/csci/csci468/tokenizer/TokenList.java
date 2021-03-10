@@ -64,7 +64,7 @@ public class TokenList implements Iterable<Token> {
     }
 
     public boolean hasMoreTokens() {
-        return !getCurrentToken().getType().equals(EOF);
+        return currentToken < tokens.size() - 1;
     }
 
     public Token lastToken() {

@@ -1,9 +1,6 @@
 package edu.montana.csci.csci468.parser;
 
-import edu.montana.csci.csci468.parser.expressions.AdditiveExpression;
-import edu.montana.csci.csci468.parser.expressions.Expression;
-import edu.montana.csci.csci468.parser.expressions.IntegerLiteralExpression;
-import edu.montana.csci.csci468.parser.expressions.SyntaxErrorExpression;
+import edu.montana.csci.csci468.parser.expressions.*;
 import edu.montana.csci.csci468.parser.statements.*;
 import edu.montana.csci.csci468.tokenizer.CatScriptTokenizer;
 import edu.montana.csci.csci468.tokenizer.Token;
@@ -84,16 +81,28 @@ public class CatScriptParser {
     }
 
     private Expression parseAdditiveExpression() {
-        Expression expression = parsePrimaryExpression();
-        if (tokens.match(PLUS, MINUS)) {
+        Expression expression = parseUnaryExpression();
+        while (tokens.match(PLUS, MINUS)) {
             Token operator = tokens.consumeToken();
-            final Expression rightHandSide = parseAdditiveExpression();
+            final Expression rightHandSide = parseUnaryExpression();
             AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
             additiveExpression.setStart(expression.getStart());
             additiveExpression.setEnd(rightHandSide.getEnd());
-            return additiveExpression;
+            expression = additiveExpression;
+        }
+        return expression;
+    }
+
+    private Expression parseUnaryExpression() {
+        if (tokens.match(MINUS, NOT)) {
+            Token token = tokens.consumeToken();
+            Expression rhs = parseUnaryExpression();
+            UnaryExpression unaryExpression = new UnaryExpression(token, rhs);
+            unaryExpression.setStart(token);
+            unaryExpression.setEnd(rhs.getEnd());
+            return unaryExpression;
         } else {
-            return expression;
+            return parsePrimaryExpression();
         }
     }
 
@@ -104,8 +113,7 @@ public class CatScriptParser {
             integerExpression.setToken(integerToken);
             return integerExpression;
         } else {
-            SyntaxErrorExpression syntaxErrorExpression = new SyntaxErrorExpression();
-            syntaxErrorExpression.setToken(tokens.consumeToken());
+            SyntaxErrorExpression syntaxErrorExpression = new SyntaxErrorExpression(tokens.consumeToken());
             return syntaxErrorExpression;
         }
     }

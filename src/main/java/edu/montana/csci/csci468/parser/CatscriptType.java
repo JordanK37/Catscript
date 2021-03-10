@@ -31,6 +31,7 @@ public class CatscriptType {
         return false;
     }
 
+    // TODO memoize this call
     public static CatscriptType getListType(CatscriptType type) {
         return new ListType(type);
     }
@@ -60,7 +61,7 @@ public class CatscriptType {
     public static class ListType extends CatscriptType {
         private final CatscriptType componentType;
         public ListType(CatscriptType componentType) {
-            super("list", List.class);
+            super("list<" + componentType.toString() + ">", List.class);
             this.componentType = componentType;
         }
 
@@ -69,7 +70,8 @@ public class CatscriptType {
             if (type == NULL) {
                 return true;
             } else if (type instanceof ListType) {
-                return this.componentType.isAssignableFrom(((ListType) type).componentType);
+                ListType otherList = (ListType) type;
+                return this.componentType.isAssignableFrom(otherList.componentType);
             }
             return false;
         }

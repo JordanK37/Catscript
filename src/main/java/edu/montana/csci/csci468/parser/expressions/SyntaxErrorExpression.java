@@ -5,10 +5,12 @@ import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.SymbolTable;
+import edu.montana.csci.csci468.tokenizer.Token;
 
 public class SyntaxErrorExpression extends Expression {
 
-    public SyntaxErrorExpression() {
+    public SyntaxErrorExpression(Token consumeToken) {
+        setToken(consumeToken);
         addError(ErrorType.UNEXPECTED_TOKEN);
     }
 

@@ -105,7 +105,7 @@ public abstract class ParseElement {
     }
 
 
-    public void verify() {
+    public final void verify() {
         SymbolTable symbolTable = new SymbolTable();
         registerFunctions(symbolTable);
         validate(symbolTable);
