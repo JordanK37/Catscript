@@ -216,11 +216,6 @@ public class CatScriptParser {
             }
             listlit.setToken(lit);
             return listlit;
-        } else if (tokens.match(RIGHT_PAREN)) {
-            Token start = tokens.consumeToken();
-            Expression expr = parseExpression();
-            boolean leftParen = tokens.match(LEFT_PAREN);
-            return expr;
         } else {
             SyntaxErrorExpression syntaxErrorExpression = new SyntaxErrorExpression(tokens.consumeToken());
             return syntaxErrorExpression;
