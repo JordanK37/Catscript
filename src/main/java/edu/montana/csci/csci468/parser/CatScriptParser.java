@@ -200,13 +200,21 @@ public class CatScriptParser {
                     return identifierExpression;}
 
         } else if (tokens.match(LEFT_BRACKET)) {
-            List<Expression> expression = new ArrayList<>();
-            Token trash = tokens.consumeToken();
-            Token integerToken = tokens.consumeToken();
-            integerToken.getStringValue();
-            ListLiteralExpression listlit = new ListLiteralExpression(expression);
-            listlit.getValues();
-            System.out.println(listlit.getValues());
+            List<Expression> litlit = new LinkedList<>();
+            Token lit = tokens.consumeToken();
+            if(!tokens.match(RIGHT_BRACKET)){
+                litlit.add(parseExpression());
+            }
+            while (tokens.match(COMMA)) {
+                tokens.consumeToken();
+                litlit.add(parseExpression());
+            }
+
+            ListLiteralExpression listlit = new ListLiteralExpression(litlit);
+            if (!tokens.match(RIGHT_BRACKET)) {
+                listlit.addError(ErrorType.UNTERMINATED_LIST);
+            }
+            listlit.setToken(lit);
             return listlit;
         } else if (tokens.match(RIGHT_PAREN)) {
             Token start = tokens.consumeToken();
