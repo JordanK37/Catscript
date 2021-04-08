@@ -27,7 +27,7 @@ public class TypeLiteral extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        throw new IllegalStateException("Not Supported");
+        return type;
     }
 
     @Override
