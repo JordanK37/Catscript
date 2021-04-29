@@ -1,4 +1,4 @@
 Errors:
 
 - Missing source zip
-- Missing Jordan_Kelly_portfolio.pdf
+- Missing jordan_kelly_portfolio.pdf
