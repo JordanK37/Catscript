@@ -60,9 +60,36 @@ public class CatScriptParser {
         return new SyntaxErrorStatement(tokens.consumeToken());
     }
 
-    private Statement parseFunctionDeclaration() {
-        return null;
+    private Statement parseFunctionDeclaration() { return null;}
+       /* FunctionDefinitionStatement functionDefinitionStatement = new FunctionDefinitionStatement();
+        String type = tokens.getCurrentToken().toString();
+        if (type.equals("function")){
+            Token start = tokens.consumeToken();
+            Token name = require(IDENTIFIER, functionDefinitionStatement);
+            require(LEFT_PAREN, functionDefinitionStatement);
+            List<Expression> expression = new LinkedList<>();
+            while(!tokens.matchAndConsume(RIGHT_PAREN)){
+                Expression expression1 = parseExpression();
+                expression.add(expression1);
+            }
+            require(COLON, functionDefinitionStatement);
+            parseTypeExpression();
+            require(LEFT_BRACE, functionDefinitionStatement);
+            parsefunctionbodystatement();
+            require(RIGHT_BRACE, functionDefinitionStatement);
+            functionDefinitionStatement.setStart(start);
+            functionDefinitionStatement.getBody();
+            functionDefinitionStatement.setEnd(tokens.getCurrentToken());
+
+        }
+        return functionDefinitionStatement;
     }
+*/
+    private Statement parsefunctionbodystatement(){
+        Statement statement = parseStatement();
+        return statement;
+    }
+
 
     private Statement parseStatement() {
         Statement printstmt = parsePrintStatement();
@@ -88,7 +115,7 @@ public class CatScriptParser {
         }
     }
 
-    private Statement parseAssignmentStatement() {
+    /*private Statement parseAssignmentStatement() {
         AssignmentStatement assignmentStatement = new AssignmentStatement();
         Token loop = require(IDENTIFIER, assignmentStatement);
         if (tokens.matchAndConsume(EQUAL)) {
@@ -104,14 +131,14 @@ public class CatScriptParser {
             assignmentStatement.setVariableName(loop.getStringValue());
         }
         return assignmentStatement;
-    }
+    }*/
 
     private Statement parseReturnStatement() {
         ReturnStatement returnStatement = new ReturnStatement();
-        if (tokens.matchAndConsume(RETURN)) {
+        if (tokens.match(RETURN)) {
             Token start = tokens.getCurrentToken();
-            //List<Expression> expression = new LinkedList<>();
-            Expression expression = parseExpression();
+            tokens.consumeToken();
+            Expression expression = returnStatement.getExpression();
             returnStatement.setExpression(expression);
             returnStatement.setStart(start);
             returnStatement.setEnd(tokens.getCurrentToken());
@@ -140,6 +167,36 @@ public class CatScriptParser {
         variableStatement.setEnd(tokens.getCurrentToken());
         return variableStatement;
     }
+
+    private Statement functionCallstatement() {
+        tokens.match(IDENTIFIER);
+        Token start = tokens.consumeToken();
+        tokens.matchAndConsume(LEFT_PAREN);
+        List<Expression> expression = new LinkedList<>();
+        while(!tokens.match(RIGHT_PAREN)){
+            Expression expression1 = parseExpression();
+            expression.add(expression1);
+        }
+        FunctionCallExpression functionCallExpression = new FunctionCallExpression(start.getStringValue(), expression);
+        functionCallExpression.setEnd(tokens.getCurrentToken());
+        functionCallExpression.setStart(start);
+        functionCallExpression.getArguments();
+        return null;
+    }
+
+    private Statement parseAssignmentStatement() {
+        AssignmentStatement assignmentStatement = new AssignmentStatement();
+        Token start = require(IDENTIFIER, assignmentStatement);
+        require(EQUAL, assignmentStatement);
+        Expression expression = parseExpression();
+        assignmentStatement.setVariableName(start.getStringValue());
+        assignmentStatement.setStart(start);
+        assignmentStatement.setExpression(expression);
+        assignmentStatement.setEnd(tokens.getCurrentToken());
+        return assignmentStatement;
+    }
+
+
 
     private CatscriptType parseTypeExpression() {
         if (tokens.match(IDENTIFIER)) {
@@ -173,6 +230,7 @@ public class CatScriptParser {
         if (tokens.match(IF)) {
             IfStatement ifStatement = new IfStatement();
             Token start = tokens.consumeToken();
+            ifStatement.setStart(start);
             require(LEFT_PAREN, ifStatement);
             List<Expression> expression = new LinkedList<>();
             while (!tokens.matchAndConsume(RIGHT_PAREN)) {
@@ -182,22 +240,24 @@ public class CatScriptParser {
             /*ifStatement.setExpression((Expression) expression);*/
             require(LEFT_BRACE, ifStatement);
             List<Statement> statement = new LinkedList<>();
-            while (!tokens.matchAndConsume(RIGHT_BRACE, EOF)) {
+            while (!tokens.match(RIGHT_BRACE, EOF)) {
                 Statement statement1 = parseStatement();
                 statement.add(statement1);
             }
-            //require(RIGHT_BRACE, ifStatement);
-            ifStatement.setTrueStatements(statement);
+            require(RIGHT_BRACE, ifStatement);
             if (tokens.matchAndConsume(ELSE)) {
-                require(RIGHT_BRACE, ifStatement);
-            } else {
-
-
-                ifStatement.setStart(start);
-                ifStatement.setEnd(require(RIGHT_BRACKET, ifStatement));
-
-            }
-            return ifStatement;
+                require(LEFT_BRACE, ifStatement);
+                if (tokens.matchAndConsume(IF)){
+                    parseIfStatement();
+                } else {
+                    while (!tokens.match(RIGHT_BRACE, EOF)) {
+                        Statement statement1 = parseStatement();
+                        statement.add(statement1);
+                    }
+                    ifStatement.setTrueStatements(statement);
+                    ifStatement.setEnd(require(RIGHT_BRACE, ifStatement));
+                }
+            } return ifStatement;
         } else {
                 return null;
         }
