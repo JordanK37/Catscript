@@ -1,4 +1,1 @@
-Errors:
-
-- Missing source zip
-- Missing jordan_kelly_portfolio.pdf
+All Good
